@@ -1,0 +1,281 @@
+/* Form Container */
+.add-booking-form {
+  background: white;
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.05);
+}
+
+/* Form Labels */
+.form-label {
+  font-family: 'Poppins', sans-serif;
+  font-family: Poppins;
+  font-weight: 600;
+  font-style: SemiBold;
+  font-size: 16px;
+  color: black;
+  
+  margin-bottom: 8px;
+  display: block;
+}
+
+.form-label.required::after {
+  content: ' *';
+  color: #DC2626;
+  font-weight: 600;
+}
+
+/* Section Headings */
+.section-heading {
+  font-family: 'Poppins', sans-serif;
+  font-weight: 600;
+  font-size: 19px;
+  color: black;
+  margin-top: 24px;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.section-icon {
+  color: #A2A9B4;
+  font-size: 16px;
+}
+
+/* Input Groups */
+.input-group-custom {
+  position: relative;
+  width: 100%;
+}
+
+.form-control-custom {
+  width: 100%;
+  padding: 12px 40px 12px 16px;
+  border: 1.09px solid #E5E7EB;
+  border-radius: 8px;
+  font-family: 'Poppins', sans-serif;
+  font-size: 14px;
+  color: #111827;
+  background: white;
+  transition: all 0.2s ease;
+}
+
+.form-control-custom:focus {
+  outline: none;
+  border-color: #2563EB;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.form-control-custom::placeholder {
+  color: #9CA3AF;
+}
+
+.form-control-custom select {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-image: none;
+  background: white;
+}
+
+/* Hide default select arrow for all browsers */
+select.form-control-custom {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-image: none;
+  background: white;
+}
+
+select.form-control-custom::-ms-expand {
+  display: none;
+}
+.placholder .form-control-custom::placeholder {
+  color: black !important;
+}
+
+/* Black placeholder for select elements */
+.placholder select.form-control-custom {
+  color: black !important;
+  font-weight: 400;
+  font-size: 17px;
+}
+
+.placholder select.form-control-custom option:first-child {
+  color: #111827 !important;
+}
+
+.placholder select.form-control-custom option:not(:first-child) {
+  color: #111827;
+}
+.textarea-custom {
+  resize: vertical;
+  min-height: 80px;
+}
+
+.input-icon {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #9CA3AF;
+  font-size: 16px;
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Luggage Buttons */
+.luggage-buttons {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.luggage-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  border: 1px solid #E5E7EB;
+  border-radius: 8px;
+  background: white;
+  color: #6B7280;
+  font-family: 'Poppins', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.luggage-btn:hover {
+  border-color: #2563EB;
+  color: #2563EB;
+  background: #EFF6FF;
+}
+
+.luggage-btn.active {
+  border-color: #2563EB;
+  background: #2563EB;
+  color: white;
+}
+
+.luggage-btn svg {
+  font-size: 16px;
+}
+
+/* Account Type Link */
+.account-type-link {
+  padding-top: 12px;
+}
+
+.switch-link {
+  color: #2563EB;
+  text-decoration: none;
+  font-family: 'Poppins', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  transition: color 0.2s ease;
+}
+
+.switch-link:hover {
+  color: #1D4ED8;
+  text-decoration: underline;
+}
+
+/* Form Actions */
+.form-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 20px;
+  padding-top: 14px;
+}
+
+.btn-clear {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 24px;
+  border: none;
+  border-radius: 8px;
+  background: white;
+  color: #6B7280;
+  font-family: 'Poppins', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-clear:hover {
+  border-color: #DC2626;
+  color: #DC2626;
+  background: #FEF2F2;
+}
+
+.btn-clear svg {
+  font-size: 16px;
+}
+
+.btn-submit {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 24px;
+  border: none;
+  border-radius: 8px;
+  background: #1E3A5F;
+  color: white;
+  font-family: 'Poppins', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-submit:hover {
+  background: #1E40AF;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(30, 58, 95, 0.3);
+}
+
+.btn-submit svg {
+  font-size: 16px;
+}
+.account-type-text{
+  font-family: Poppins;
+font-weight: font weight/400;
+font-style: Regular;
+font-size: 15.23px;
+color: #4B5563;
+
+}
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .add-booking-form {
+    padding: 16px;
+  }
+  
+  .luggage-buttons {
+    flex-direction: column;
+  }
+  
+  .luggage-btn {
+    width: 100%;
+    justify-content: center;
+  }
+  
+  .form-actions {
+    flex-direction: column;
+    gap: 12px;
+  }
+  
+  .btn-clear,
+  .btn-submit {
+    width: 100%;
+    justify-content: center;
+  }
+}

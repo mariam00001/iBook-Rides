@@ -1,0 +1,499 @@
+.customer-border{
+    border-bottom: 0.8px solid  #E5E7EB;
+}
+.customer-table-wrapper {
+    background: white;
+    overflow: hidden;
+}
+
+/* Mobile responsive - enable horizontal scrolling */
+@media (max-width: 768px) {
+  .customer-table-wrapper {
+    overflow-x: auto;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    scroll-behavior: smooth;
+    width: 100%;
+  }
+  
+  .affiliate-table {
+    min-width: 800px;
+    width: max-content;
+  }
+  
+  .affiliate-table th,
+  .affiliate-table td {
+    white-space: nowrap;
+    min-width: 120px;
+  }
+}
+
+@media (max-width: 480px) {
+  .affiliate-table {
+    min-width: 700px;
+  }
+  
+  .affiliate-table th,
+  .affiliate-table td {
+    padding: 12px;
+    font-size: 12px;
+  }
+  
+  .customer-name {
+    font-size: 12px;
+  }
+  
+  .customer-email,
+  .customer-phone,
+  .customer-address,
+  .customer-date {
+    font-size: 12px;
+  }
+}
+
+/* Customer Info Styles */
+.customer-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.customer-avatar {
+  background: #DCFCE7;
+  border-radius: 8px;
+  padding: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+}
+
+.customer-avatar-icon {
+  font-size: 20px;
+  color: #000000;
+}
+
+.customer-name {
+  font-family: Poppins;
+  font-weight: 600;
+  font-size: 14px;
+  color: #111827;
+}
+
+.customer-email,
+.customer-phone,
+.customer-address,
+.customer-date {
+  font-family: Poppins;
+  font-weight: 400;
+  font-size: 14px;
+  color: #02133C;
+}
+
+/* Toggle Switch */
+.toggle-switch {
+  position: relative;
+  display: inline-block;
+  width: 44px;
+  height: 24px;
+  cursor: pointer;
+}
+
+.toggle-switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.toggle-slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #D1D5DB;
+  transition: 0.3s;
+  border-radius: 24px;
+}
+
+.toggle-slider:before {
+  position: absolute;
+  content: "";
+  height: 18px;
+  width: 18px;
+  left: 3px;
+  top: 50%;
+  transform: translateY(-50%);
+  background-color: white;
+  transition: 0.3s;
+  border-radius: 50%;
+}
+
+.toggle-switch input:checked + .toggle-slider {
+  background-color: #10B981;
+}
+
+.toggle-switch input:checked + .toggle-slider:before {
+  left: 3px;
+  transform: translateY(-50%);
+}
+
+.toggle-switch input:not(:checked) + .toggle-slider {
+  background-color: #D1D5DB;
+}
+
+.toggle-switch input:not(:checked) + .toggle-slider:before {
+  left: 23px;
+  transform: translateY(-50%);
+}
+
+/* Action Buttons Container */
+.action-buttons {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Edit Button */
+.btn-edit {
+  background: #DBEAFE;
+  border: 1.41px solid #BFDBFE;
+  color: #2563EB;
+  border: none;
+  border-radius: 11px;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  padding: 0;
+}
+
+.btn-edit svg {
+  font-size: 14px;
+}
+
+/* Delete Button */
+.btn-delete {
+  background: #FEE2E2;
+  border: 1.41px solid #FECACA;
+  color: #DC2626;
+  border: none;
+  border-radius: 11px;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  padding: 0;
+}
+
+
+.btn-delete svg {
+  font-size: 14px;
+}
+
+/* Table Styles */
+.affiliate-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.affiliate-table thead {
+  background: #F9FAFB;
+}
+
+.affiliate-table th {
+  padding: 16px;
+  text-align: left;
+  font-family: Poppins;
+  font-weight: 600;
+  font-size: 12px;
+  color: #6B7280;
+  text-transform: uppercase;
+  border-bottom: 1px solid #E5E7EB;
+}
+
+
+
+.affiliate-table td {
+  padding: 16px;
+  font-family: Poppins;
+  font-weight: 400;
+  font-size: 14px;
+  color: #1F2937;
+  border-bottom: 1px solid #E5E7EB;
+  vertical-align: middle;
+}
+
+
+
+.affiliate-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.affiliate-table tbody tr:hover {
+  background: #F9FAFB;
+}
+
+.th-content {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.sort-icons {
+  gap: 0;
+}
+
+.clickable-sort {
+  transition: all 0.3s ease;
+  padding: 4px;
+  border-radius: 4px;
+}
+
+.clickable-sort:hover {
+  background: #F3F4F6;
+}
+
+.clickable-sort svg {
+  transition: transform 0.3s ease;
+}
+
+.clickable-sort svg.collapsed {
+  transform: rotate(180deg);
+}
+
+.affiliate-table tbody.collapsed {
+  display: none;
+}
+
+/* Shared styles - using same as Affilate */
+.affiliate-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.affiliate-tabs {
+  display: flex;
+  gap: 0;
+  background: #F3F4F6;
+  border-radius: 8px;
+  padding: 4px;
+}
+
+.affiliate-tab {
+  padding: 10px 24px;
+  border: none;
+  background: transparent;
+  color: #02133C;
+  font-family: Poppins;
+  font-weight: 500;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border-radius: 8px;
+  position: relative;
+}
+
+.affiliate-tab.active {
+  background: white;
+  color: #1F2937;
+  z-index: 1;
+}
+
+.affiliate-tab:hover:not(.active) {
+  background: #E5E7EB;
+}
+
+.entries-selector {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.entries-label {
+  font-family: Poppins;
+  font-weight: 600;
+  font-size: 14px;
+  color: #4B5563;
+}
+
+.entries-select {
+  padding: 8px 12px;
+  border: 1px solid #E5E7EB;
+  border-radius: 6px;
+  font-family: Poppins;
+  font-size: 14px;
+  background: white;
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  min-width: 88px;
+}
+
+.search-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.search-icon {
+  position: absolute;
+  left: 12px;
+  color: #9CA3AF;
+  font-size: 16px;
+}
+
+.search-input {
+  padding: 10px 16px 10px 40px;
+  border: 1px solid #E5E7EB;
+  border-radius: 8px;
+  font-family: Poppins;
+  font-size: 14px;
+  width: 273px;
+}
+
+.pagination-container-2 {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 32px;
+}
+
+.pagination-info {
+  font-family: Poppins;
+  font-weight: 600;
+  font-size: 14px;
+  color: #374151;
+}
+
+.pagination {
+  display: flex;
+  gap: 8px;
+}
+
+.pagination-btn {
+  padding: 4px 12px;
+  border: 1px solid #D1D5DB;
+  background: white;
+  color: #6B7280;
+  border-radius: 6px;
+  font-family: Poppins;
+  font-weight: 400;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.pagination-btn:hover:not(:disabled) {
+  background: #F3F4F6;
+}
+
+.pagination-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.pagination-btn.active {
+  background: #02133C;
+  color: white;
+  border-color: #02133C;
+}
+
+/* Delete Confirmation Modal */
+.delete-modal-content {
+  background: white;
+  border-radius: 12px;
+  width: 90%;
+  max-width: 500px;
+  position: relative;
+  box-shadow: 0px 20px 25px -5px rgba(0, 0, 0, 0.1);
+}
+
+.delete-modal-body {
+  padding: 32px 24px;
+  text-align: center;
+}
+
+.delete-modal-question {
+  font-family: Poppins;
+  font-weight: 700;
+  font-size: 24px;
+  color: #333333;
+  margin-bottom: 24px;
+  line-height: 1.5;
+}
+
+.delete-customer-name {
+  font-family: Poppins;
+  font-weight: 700;
+  font-size: 24px;
+  color: #053094;
+  display: inline;
+}
+
+.delete-modal-buttons {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+}
+
+.btn-delete-confirm {
+  background: #FF2D55;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 12px 24px;
+  width: 100%;
+  font-family: Poppins;
+  font-weight: 400;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.delete-icon {
+  font-size: 14px;
+  color: white;
+}
+
+.btn-delete-cancel {
+  background: white;
+  color: #1F2937;
+  border: 1px solid #374151;
+  border-radius: 8px;
+  padding: 12px 24px;
+  width: 100%;
+  font-family: Poppins;
+  font-weight: 500;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+
+.cancel-icon {
+  font-size: 14px;
+  color: #1F2937;
+}

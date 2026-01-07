@@ -1,0 +1,527 @@
+/* Teams Component Styles */
+
+.team-tabs {
+  display: flex;
+  gap: 32px;
+  background: transparent;
+  border-radius: 0;
+  padding: 0;
+  border-bottom: 1px solid #E5E7EB;
+}
+
+.team-tab {
+  padding: 18px 0px;
+  border: none;
+  background: transparent;
+  color: #6B7280;
+  font-family: Poppins;
+  font-weight: 500;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border-radius: 0;
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+}
+
+.teams-table th{
+    background-color: white;
+}
+.teams-table td{
+    background-color: #F9FAFB;
+}
+.col-md-6.active .team-tab {
+  background: transparent;
+  color: #1F2937;
+  font-weight: 600;
+  border-bottom: 1.41px solid #02133C;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.col-md-6.active {
+  background-color: #E5EDFF;
+}
+
+.team-tab:hover:not(.active) {
+  background: transparent;
+  color: #1F2937;
+}
+
+.team-tab svg {
+  font-size: 16px;
+}
+
+.teams-controls button{
+    font-family: Poppins;
+    font-weight: 600;
+    text-align: center;
+    font-size: 16px;
+color: #02133C;    
+}
+.border-bottom-teams{
+    border-bottom: 1.41px solid #E5E7EB;
+}
+.font-customer{
+    font-family: Poppins;
+font-weight: 700;
+font-style: Bold;
+font-size: 24.07px;
+color: #111827;
+}
+.teams-avatar{
+    border: 1.41px solid #BFDBFE;
+    background: #DBEAFE;
+padding: 2px;
+color: #2563EB;
+border-radius: 50%;
+width: 40px;
+height: 40px;
+display: flex;
+align-items: center;
+justify-content: center;
+
+}
+.role-badge {
+    padding: 4px 14px;
+    border-radius:  14073.45px;
+    border: 1.41px solid #E9D5FF;
+    background: #F3E8FF;
+    color: #6B21A8;
+    font-size: 14px;
+    font-family: Poppins;
+    font-weight: 500;
+    display: inline-block;
+}
+.status-available {
+    padding: 4px 14px;
+    background: #DCFCE7;
+    color: #166534;
+    border-radius:  14073.45px;
+    border: 1.41px solid #BBF7D0;
+    font-size: 14px;
+    font-family: Poppins;
+    font-weight: 500;
+    display: inline-block;
+}
+.personal-name{
+    font-family: Poppins;
+font-weight: 600;
+font-size: 18px;
+color: #111827;
+}
+
+/* Role Card Styles */
+.role-card {
+    background: white;
+    border: 1px solid #E5E7EB;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.05);
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.role-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 16px;
+}
+
+.role-header-content {
+    display: flex;
+    gap: 12px;
+}
+
+.role-icon-wrapper {
+    width: 48px;
+    height: 48px;
+    border-radius: 16.89px;
+    background: #F3E8FF;
+    border: 1.41px solid #E9D5FF;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.role-icon {
+    font-size: 20px;
+    color: #7C3AED;
+}
+
+.role-name {
+    font-family: Poppins;
+    font-weight: 700;
+    font-size: 18px;
+    color: #111827;
+    margin: 0;
+}
+
+.role-description {
+    font-family: Poppins;
+    font-weight: 400;
+    font-size: 14px;
+    color: #4B5563;
+    margin: 0;
+}
+
+.role-subrole {
+    font-family: Poppins;
+    font-weight: 400;
+    font-size: 14px;
+    color: #4B5563;
+    margin: 4px 0 0 0;
+}
+
+.role-view-btn {
+    background: #F3F4F6;
+    border-radius: 12px;
+    border: none;
+    cursor: pointer;
+    padding: 4px 8px;
+}
+
+.role-view-btn svg {
+    font-size: 20px;
+    color: #6B7280;
+}
+
+.role-details {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.role-detail-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.role-detail-label {
+    font-family: Poppins;
+    font-weight: 400;
+    font-size: 14px;
+    color: #6B7280;
+}
+
+.role-users-badge {
+    padding: 4px 12px;
+    border-radius: 12px;
+    background: #DBEAFE;
+    border: 1.41px solid #BFDBFE;
+    color: #000E33;
+    font-size: 14px;
+    font-family: Poppins;
+    font-weight: 600;
+}
+
+.role-permissions-badge {
+    padding: 4px 12px;
+    border-radius: 12px;
+    background: #DCFCE7;
+    border: 1.41px solid #BBF7D0;
+    color: #166534;
+    font-size: 14px;
+    font-family: Poppins;
+    font-weight: 600;
+}
+
+.role-created-date {
+    font-family: Poppins;
+    font-weight: 400;
+    font-size: 14px;
+    color: #1F2937;
+}
+
+.role-actions {
+    display: flex;
+    gap: 12px;
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid #E5E7EB;
+}
+
+.btn-edit-role {
+    flex: 1;
+    padding: 10px 16px;
+    background: #C9D7F8;
+    color: #000E33;
+    border: none;
+    border-radius: 11.26px;
+    font-family: Poppins;
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.btn-delete-role {
+    flex: 1;
+    padding: 10px 16px;
+    background: #FEE2E2;
+    color: #DC2626;
+    border: none;
+    border-radius: 11.26px;
+    font-family: Poppins;
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+/* Permission Cards Grid */
+.permissions-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-top: 12px;
+}
+
+.permission-card {
+    background: #F9FAFB;
+    border: 1px solid #E5E7EB;
+    border-radius: 8px;
+    padding: 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.permission-card:hover {
+    background: #F3F4F6;
+    border-color: #D1D5DB;
+}
+
+.permission-card.selected {
+    background: #EFF6FF;
+    border-color: #3B82F6;
+    border-width: 2px;
+}
+
+.permission-icon-wrapper {
+    width: 40px;
+    height: 40px;
+    background: #E5E7EB;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.permission-card.selected .permission-icon-wrapper {
+    background: #DBEAFE;
+}
+
+.permission-icon {
+    font-size: 20px;
+    color: #6B7280;
+}
+
+.permission-card.selected .permission-icon {
+    color: #3B82F6;
+}
+
+.permission-content {
+    flex: 1;
+}
+
+.permission-name {
+    font-family: Poppins;
+    font-weight: 600;
+    font-size: 14px;
+    color: #1F2937;
+    margin: 0 0 4px 0;
+}
+
+.permission-description {
+    font-family: Poppins;
+    font-weight: 400;
+    font-size: 12px;
+    color: #6B7280;
+    margin: 0;
+}
+
+/* Modal Form Styles */
+.modal-body .form-control {
+    width: 100%;
+    padding: 10px 16px;
+    border: 1px solid #E5E7EB;
+    border-radius: 8px;
+    font-family: Poppins;
+    font-size: 14px;
+    font-weight: 400;
+    color: #1F2937;
+    background: white;
+}
+
+.modal-body .form-control:focus {
+    outline: none;
+    border-color: #3B82F6;
+}
+
+.modal-body textarea.form-control {
+    min-height: 80px;
+    resize: vertical;
+}
+.modal-content-3 {
+    background: white;
+    border-radius: 12px;
+    width: 90%;
+    max-width: 873.76px;
+    max-height: 90vh;
+    overflow-y: auto;
+    position: relative;
+    box-shadow: 0px 20px 25px -5px rgba(0, 0, 0, 0.1);
+  }
+  .form-group input , .form-group select {
+    padding: 13.52px 23px;
+    background: #F9FAFB;
+    border: 1.36px solid #D1D5DB;
+    border-radius: 10.86px;
+    font-family: Poppins;
+    font-size: 16px;
+    font-weight: 400;
+    color: #6B7280;
+  }
+  
+  .modal-content-3 .form-group textarea,
+  .modal-content-3 textarea.form-control {
+    padding: 13.52px 23px;
+    background: #F9FAFB;
+    border: 1.36px solid #D1D5DB;
+    border-radius: 10.86px;
+    font-family: Poppins;
+    font-size: 16px;
+    font-weight: 400;
+    color: #6B7280;
+    width: 100%;
+    min-height: 80px;
+    resize: vertical;
+  }
+  
+  .modal-content-3 .form-group textarea:focus,
+  .modal-content-3 textarea.form-control:focus {
+    outline: none;
+    border-color: #3B82F6;
+  }
+
+/* Responsive Controls - Tablet */
+@media (max-width: 1024px) {
+  .affiliate-controls-right {
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  
+  .affiliate-controls-right .d-flex.align-items-center.gap-3 {
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  
+  .search-input {
+    width: 200px;
+  }
+  
+  .font-customer {
+    font-size: 20px;
+  }
+}
+
+/* Mobile responsive - enable horizontal scrolling for Teams table */
+@media (max-width: 768px) {
+  .affiliate-controls-right {
+    flex-direction: column;
+    align-items: stretch !important;
+    gap: 16px;
+  }
+  
+  .font-customer {
+    font-size: 18px;
+    margin-bottom: 0;
+  }
+  
+  .affiliate-controls-right .d-flex.align-items-center.gap-3 {
+    flex-direction: column;
+    width: 100%;
+    gap: 12px;
+    align-items: stretch !important;
+  }
+  
+  .search-container {
+    width: 100%;
+  }
+  
+  .search-input {
+    width: 100%;
+  }
+  
+  .btn-add-booking {
+    width: 100%;
+    padding: 12px 20px;
+  }
+  
+  .customer-table-wrapper {
+    overflow-x: auto;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    scroll-behavior: smooth;
+    width: 100%;
+  }
+  
+  .affiliate-table.teams-table,
+  .teams-table {
+    min-width: 800px;
+    width: max-content;
+  }
+  
+  .teams-table th,
+  .teams-table td {
+    white-space: nowrap;
+    min-width: 120px;
+  }
+}
+
+@media (max-width: 480px) {
+  .font-customer {
+    font-size: 16px;
+  }
+  
+  .search-input {
+    font-size: 13px;
+    padding: 8px 14px 8px 36px;
+  }
+  
+  .btn-add-booking {
+    font-size: 13px;
+    padding: 10px 18px;
+  }
+  
+  .affiliate-table.teams-table,
+  .teams-table {
+    min-width: 700px;
+  }
+  
+  .teams-table th,
+  .teams-table td {
+    padding: 12px;
+    font-size: 12px;
+  }
+}
