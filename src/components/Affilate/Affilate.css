@@ -40,7 +40,7 @@
   padding: 10px 24px;
   border: none;
   background: transparent;
-  color: #02133C;
+  color: #4B5563 !important;
   font-family: Poppins;
   font-weight: 500;
   font-size: 14px;
@@ -52,7 +52,7 @@
 
 .affiliate-tab.active {
   background: white;
-  color: #1F2937;
+  color: #02133C !important;
   z-index: 1;
 }
 
@@ -149,7 +149,6 @@
 }
 .search-input{
     font-family: Poppins;
-font-weight: 600;
 font-size:14px;
 color: #9CA3AF;
 }

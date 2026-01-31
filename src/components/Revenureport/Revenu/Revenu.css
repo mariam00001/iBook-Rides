@@ -1,0 +1,116 @@
+/* Revenue Filter Section */
+.revenue-filter-section {
+  border-radius: 8px;
+}
+
+.revenue-label {
+  font-family: Poppins;
+  font-weight: 500;
+  font-size: 14px;
+  color: #111827;
+  margin-bottom: 8px;
+  display: block;
+}
+
+.revenue-input-group {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.revenue-input {
+  width: 100%;
+  padding: 13.52px 23px;
+  padding-right: 50px;
+  border: 1.36px solid #D1D5DB;
+  border-radius: 10.86px;
+  font-family: Poppins;
+  font-size: 16px;
+  font-weight: 400;
+  color: #6B7280;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+}
+
+.revenue-input:focus {
+  outline: none;
+  border-color: #3B82F6;
+}
+
+.revenue-input-group select.revenue-input {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%236B7280' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 23px center;
+}
+
+.revenue-input-icon {
+  position: absolute;
+  right: 23px;
+  color: #6B7280;
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+}
+
+.revenue-search-btn {
+  width: 100%;
+}
+
+/* Revenue Tabs Section */
+.revenue-tabs-section {
+  display: flex;
+  justify-content: flex-start;
+}
+
+/* Revenue Content Section */
+.revenue-content-section {
+  background-color: #FFFFFF;
+  border-radius: 8px;
+}
+
+/* Revenue Chart Section */
+.revenue-chart-section {
+  margin-bottom: 32px;
+}
+
+.revenue-chart-section:last-child {
+  margin-bottom: 0;
+}
+
+.revenue-chart-title {
+  font-family: Poppins;
+  font-weight: 600;
+  font-size: 18px;
+  color: #111827;
+  margin-bottom: 24px;
+}
+
+.revenue-chart-wrapper {
+  height: 300px;
+  width: 100%;
+  background-color: #F3F4F6;
+  padding: 20px;
+  border-radius: 8px;
+}
+
+/* Side by side charts for Custmors */
+.revenue-content-section .row .col-md-6 .revenue-chart-section {
+  margin-bottom: 0;
+}
+
+/* Revenue Table Section */
+.revenue-table-section {
+  margin-top: 32px;
+}
+
+.revenue-table-section .affiliate-table {
+  width: 100%;
+}
+
+.revenue-table-section .affiliate-table th,
+.revenue-table-section .affiliate-table td {
+  padding: 12px;
+  text-align: left;
+}
+

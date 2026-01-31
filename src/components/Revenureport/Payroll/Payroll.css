@@ -1,0 +1,16 @@
+/* Center align all table headers and cells except the first and last columns */
+.customer-table-wrapper .affiliate-table th:not(:first-child),
+.customer-table-wrapper .affiliate-table td:not(:first-child) {
+  text-align: center;
+}
+
+/* Center align the th-content divs except the first and last columns */
+.customer-table-wrapper .affiliate-table th:not(:first-child) .th-content {
+  justify-content: center;
+}
+
+/* Center align customer info except the first and last columns */
+.customer-table-wrapper .affiliate-table td:not(:first-child) .customer-info {
+  justify-content: center;
+}
+

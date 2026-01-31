@@ -151,6 +151,16 @@ body {
   font-family: Poppins;
   transition: all 0.2s ease;
 }
+.form-group input , .form-group select {
+  padding: 13.52px 23px !important;
+  background: #F9FAFB !important;
+  border: 1.36px solid #D1D5DB !important;
+  border-radius: 10.86px !important;
+  font-family: Poppins !important;
+  font-size: 16px !important;
+  font-weight: 400 !important;
+  color: #374151 !important;
+}
 /* Send Request Button */
 .btn-send-request {
   padding: 8px !important;
@@ -413,3 +423,20 @@ color: #02133C;
 border-radius: 8px;
 display: flex;
 }
+.manage-font th{
+  font-weight: 600 !important;
+  font-style: SemiBold !important;
+  font-size: 16px !important;
+  color: #374151 !important;
+  text-transform: none !important;
+
+  }
+  .vch-font th{
+    font-weight: 300 !important;
+    font-size: 12 !important;
+    color: #111827 !important;
+    
+    }
+    .margin-right{
+      margin-right: 100px;
+    }

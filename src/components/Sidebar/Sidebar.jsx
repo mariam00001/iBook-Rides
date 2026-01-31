@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import logo from '../../assets/logo (5) 1.svg';
 import './Sidebar.css';
@@ -14,7 +15,8 @@ const Sidebar = ({ isOpen, onClose }) => {
   const [expandedItems, setExpandedItems] = useState({
     settings: false,
     finance: false,
-    revenue: false
+    revenue: false,
+    'user-manage': false
   });
 
   const menuItems = [
@@ -24,7 +26,6 @@ const Sidebar = ({ isOpen, onClose }) => {
     { path: '/affiliate', icon: 'affiliate', label: 'Affiliate' },
     { path: '/customers', icon: 'customers', label: 'Custmors' },
     { path: '/feedbacks', icon: 'star', label: 'Feedbacks' },
-    { path: '/user-manage', icon: 'user-manage', label: 'User Manage' },
     { path: '/vehicles', icon: 'car', label: 'Vehciels' },
     { path: '/teams', icon: 'teams', label: 'Teams' },
     { path: '/invoices', icon: 'invoice', label: 'Invoices' },
@@ -33,20 +34,34 @@ const Sidebar = ({ isOpen, onClose }) => {
 
   const dropdownItems = [
     { 
+      key: 'user-manage', 
+      icon: 'user-manage', 
+      label: 'User Manage',
+      position: null,
+      subItems: [
+        { path: '/user-manage/service', label: 'Service' },
+        { path: '/user-manage/ratemanage', label: 'Rate Manage' },
+        { path: '/user-manage/additional', label: 'Additional' },
+        { path: '/user-manage/addrates', label: 'Add Rates' },   
+      ]
+    },
+    { 
       key: 'settings', 
       icon: 'settings', 
       label: 'Settings',
+      position: null, // Render at end
       subItems: [
-        { path: '/settings/suppliers', label: 'Suppliers' },
-        { path: '/settings/suppliers-2', label: 'Suppliers' },
-        { path: '/settings/suppliers-3', label: 'Suppliers' },
-        { path: '/settings/suppliers-4', label: 'Suppliers' }
+        { path: '/settings/company', label: 'Company' },
+        { path: '/settings/preview', label: 'Preview & Install' },
+        { path: '/settings/payment-type', label: 'Payment Type' },
+        { path: '/settings/discounts', label: 'Discounts' },
       ]
     },
     { 
       key: 'finance', 
       icon: 'finance', 
       label: 'Finance',
+      position: null, // Render at end
       subItems: [
         { path: '/finance/transactions', label: 'Transactions' },
         { path: '/finance/reports', label: 'Reports' },
@@ -57,12 +72,13 @@ const Sidebar = ({ isOpen, onClose }) => {
       key: 'revenue', 
       icon: 'revenue', 
       label: 'Revenu',
+      position: null, // Render at end
       subItems: [
-        { path: '/revenue/overview', label: 'Overview' },
-        { path: '/revenue/analytics', label: 'Analytics' },
-        { path: '/revenue/forecast', label: 'Forecast' }
+        { path: '/revenue/revenue', label: 'revenue' },
+        { path: '/revenue/payroll', label: 'Payroll' },
       ]
     },
+    
   ];
 
   const toggleDropdown = (key, e) => {
@@ -75,7 +91,8 @@ const Sidebar = ({ isOpen, onClose }) => {
         ...prev,
         [key]: !prev[key]
       };
-      console.log('Dropdown state:', newState);
+      console.log(`Toggling ${key}:`, prev[key], '->', newState[key]);
+      console.log('All dropdown states:', newState);
       return newState;
     });
   };
@@ -86,6 +103,30 @@ const Sidebar = ({ isOpen, onClose }) => {
     }
     if (path === '/booking') {
       return location.pathname === '/booking' || location.pathname === '/add-booking';
+    }
+    if (path === '/settings/company') {
+      return location.pathname === '/settings/company';
+    }
+    if (path === '/settings/preview') {
+      return location.pathname === '/settings/preview';
+    }
+    if (path === '/settings/payment-type') {
+      return location.pathname === '/settings/payment-type';
+    }
+    if (path === '/settings/discounts') {
+      return location.pathname === '/settings/discounts';
+    }
+    if (path === '/user-manage/service') {
+      return location.pathname === '/user-manage/service';
+    }
+    if (path === '/user-manage/ratemanage') {
+      return location.pathname === '/user-manage/ratemanage';
+    }
+    if (path === '/user-manage/additional') {
+      return location.pathname === '/user-manage/additional';
+    }
+    if (path === '/user-manage/addrates') {
+      return location.pathname === '/user-manage/addrates';
     }
     return location.pathname.startsWith(path);
   };
@@ -138,6 +179,52 @@ const Sidebar = ({ isOpen, onClose }) => {
     return icons[iconName] || <span>{iconName}</span>;
   };
 
+  // Auto-expand dropdown if any sub-item is active
+  useEffect(() => {
+    setExpandedItems(prev => {
+      const newExpandedItems = { ...prev };
+      dropdownItems.forEach(item => {
+        const hasActiveSubItem = item.subItems.some(subItem => {
+          if (subItem.path === '/home') {
+            return location.pathname === '/' || location.pathname === '/home';
+          }
+          if (subItem.path === '/booking') {
+            return location.pathname === '/booking' || location.pathname === '/add-booking';
+          }
+          if (subItem.path === '/settings/company') {
+            return location.pathname === '/settings/company';
+          }
+          if (subItem.path === '/settings/preview') {
+            return location.pathname === '/settings/preview';
+          }
+          if (subItem.path === '/settings/payment-type') {
+            return location.pathname === '/settings/payment-type';
+          }
+          if (subItem.path === '/settings/discounts') {
+            return location.pathname === '/settings/discounts';
+          }
+          if (subItem.path === '/user-manage/service') {
+            return location.pathname === '/user-manage/service';
+          }
+          if (subItem.path === '/user-manage/ratemanage') {
+            return location.pathname === '/user-manage/ratemanage';
+          }
+          if (subItem.path === '/user-manage/additional') {
+            return location.pathname === '/user-manage/additional';
+          }
+          if (subItem.path === '/user-manage/addrates') {
+            return location.pathname === '/user-manage/addrates';
+          }
+            return location.pathname.startsWith(subItem.path);
+        });
+        if (hasActiveSubItem) {
+          newExpandedItems[item.key] = true;
+        }
+      });
+      return newExpandedItems;
+    });
+  }, [location.pathname]);
+
   const handleLinkClick = () => {
     // Close sidebar on mobile/tablet when a link is clicked
     if (typeof onClose === 'function' && window.innerWidth <= 1024) {
@@ -161,24 +248,74 @@ const Sidebar = ({ isOpen, onClose }) => {
           </div>
         </div>
         <nav className="sidebar-nav">
-          {menuItems.map((item) => (
-            <Link
-              key={item.path}
-              to={item.path}
-              className={`sidebar-item ${isActive(item.path) ? 'active' : ''}`}
-              onClick={handleLinkClick}
-            >
-              <div className="sidebar-item-content">
-                <span className="sidebar-icon">{getIcon(item.icon)}</span>
-                <span className="sidebar-label">{item.label}</span>
-              </div>
-            </Link>
-          ))}
+          {menuItems.map((item, index) => {
+            // Check if we need to insert a dropdown at this position
+            const dropdownToInsert = dropdownItems.find(dd => dd.position === index);
+            
+            return (
+              <React.Fragment key={item.path || `menu-${index}`}>
+                <Link
+                  to={item.path}
+                  className={`sidebar-item ${isActive(item.path) ? 'active' : ''}`}
+                  onClick={handleLinkClick}
+                >
+                  <div className="sidebar-item-content">
+                    <span className="sidebar-icon">{getIcon(item.icon)}</span>
+                    <span className="sidebar-label">{item.label}</span>
+                  </div>
+                </Link>
+                {dropdownToInsert && (() => {
+                  const hasActiveSubItem = dropdownToInsert.subItems.some(subItem => isActive(subItem.path));
+                  return (
+                    <div key={dropdownToInsert.key} className="sidebar-dropdown">
+                      <div
+                        className={`sidebar-item ${expandedItems[dropdownToInsert.key] ? 'expanded' : ''} ${hasActiveSubItem ? 'active' : ''}`}
+                        onClick={(e) => toggleDropdown(dropdownToInsert.key, e)}
+                        style={{ cursor: 'pointer' }}
+                      >
+                        <div className="sidebar-item-content">
+                          <span className="sidebar-icon">{getIcon(dropdownToInsert.icon)}</span>
+                          <span className="sidebar-label">{dropdownToInsert.label}</span>
+                          <span className="dropdown-arrow">
+                            <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                              <path d="M3 4.5L6 7.5L9 4.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                            </svg>
+                          </span>
+                        </div>
+                      </div>
+                      {expandedItems[dropdownToInsert.key] && (
+                        <div className="submenu-list">
+                          {dropdownToInsert.subItems && dropdownToInsert.subItems.length > 0 ? (
+                            dropdownToInsert.subItems.map((subItem) => (
+                              <div key={subItem.path} className="submenu-item">
+                                <Link
+                                  to={subItem.path}
+                                  className={`submenu-link ${isActive(subItem.path) ? 'active' : ''}`}
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    handleLinkClick();
+                                  }}
+                                >
+                                  {subItem.label}
+                                </Link>
+                              </div>
+                            ))
+                          ) : null}
+                        </div>
+                      )}
+                    </div>
+                  );
+                })()}
+              </React.Fragment>
+            );
+          })}
         
-        {dropdownItems.map((item) => (
+        {dropdownItems.filter(item => item.position === null).map((item) => {
+          const hasActiveSubItem = item.subItems.some(subItem => isActive(subItem.path));
+          return (
           <div key={item.key} className="sidebar-dropdown">
             <div
-              className={`sidebar-item ${expandedItems[item.key] ? 'expanded' : ''}`}
+              className={`sidebar-item ${expandedItems[item.key] ? 'expanded' : ''} ${hasActiveSubItem ? 'active' : ''}`}
               onClick={(e) => toggleDropdown(item.key, e)}
               style={{ cursor: 'pointer' }}
             >
@@ -193,24 +330,28 @@ const Sidebar = ({ isOpen, onClose }) => {
               </div>
             </div>
             {expandedItems[item.key] && (
-              <div className="dropdown-menu" onClick={(e) => e.stopPropagation()}>
-                {item.subItems.map((subItem) => (
-                  <Link
-                    key={subItem.path}
-                    to={subItem.path}
-                    className="dropdown-item"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleLinkClick();
-                    }}
-                  >
-                    {subItem.label}
-                  </Link>
-                ))}
+              <div className="submenu-list">
+                {item.subItems && item.subItems.length > 0 ? (
+                  item.subItems.map((subItem) => (
+                    <div key={subItem.path} className="submenu-item">
+                      <Link
+                        to={subItem.path}
+                        className={`submenu-link ${isActive(subItem.path) ? 'active' : ''}`}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleLinkClick();
+                        }}
+                      >
+                        {subItem.label}
+                      </Link>
+                    </div>
+                  ))
+                ) : null}
               </div>
             )}
           </div>
-        ))}
+          );
+        })}
         </nav>
       </div>
     </>

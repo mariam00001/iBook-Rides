@@ -1,0 +1,10 @@
+.text-name span{
+    font-family: Poppins;
+font-weight: 600;
+font-style: SemiBold;
+font-size: 12px;
+color: black !important;
+}
+.margin-add{
+    margin-right: 150px;
+}

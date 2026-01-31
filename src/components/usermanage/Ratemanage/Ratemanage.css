@@ -1,0 +1,13 @@
+
+.btn-rate-manage{
+    border: 1px solid #000E33;
+    border-radius: 8px;
+    padding: 8px 24px;
+    font-size: 14px;
+    color: #000E33;
+    cursor: pointer;
+    background-color: transparent;
+}
+.manage-ng th{
+    background-color: #E5E7EB;
+}

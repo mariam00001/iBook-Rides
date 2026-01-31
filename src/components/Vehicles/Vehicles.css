@@ -1,0 +1,360 @@
+/* Vehicles Component Styles */
+.vehicles-table-wrapper {
+  background: white;
+  border-radius: 12px;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Vehicle Name Style */
+.vehicle-name {
+  font-family: Poppins;
+  font-weight: 400;
+  font-style: normal;
+  font-size: 14px;
+}
+
+
+.vehicles-table-wrapper .affiliate-table th {
+  padding: 14px 16px;
+  font-family: Poppins;
+  font-weight: 600;
+  font-size: 12px;
+  color: #6B7280;
+  text-transform: uppercase;
+  background: #F9FAFB;
+}
+
+.vehicles-table-wrapper .affiliate-table td {
+  padding: 14px 16px;
+  font-family: Poppins;
+  font-weight: 400;
+  font-size: 14px;
+  color: #1F2937;
+  vertical-align: middle;
+  border-bottom: none !important;
+  padding-bottom: 50px;
+
+}
+
+.vehicles-table-wrapper .affiliate-table tbody tr:hover {
+  background: #F9FAFB;
+}
+
+/* Vehicles Status Badge */
+.vehicles-status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 2px 10px;
+  border-radius: 9999px;
+  font-family: Poppins;
+  background: #D1FAE5;
+  color: #065F46;
+  font-family: Poppins;
+font-weight: 400;
+font-size: 14px;
+
+}
+
+.vehicles-status-badge svg {
+  font-size: 9px;
+  color: #065F46;
+  font-weight: 200;
+}
+
+/* Vehicles Category Badge */
+.vehicles-category-badge {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 6px;
+  font-family: Poppins;
+  font-weight: 500;
+  font-size: 14px;
+  background: #F3F4F6;
+  color: #1F2937;
+}
+
+/* Vehicles Action Buttons */
+.vehicles-action-buttons {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+}
+
+.Features .vehicles-action-buttons {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  justify-content: flex-end;
+
+}
+.Features .vehicles-table-wrapper .affiliate-table th:last-child {
+  text-align: right;
+  padding-right: 50px;
+}
+
+.Features .vehicles-table-wrapper .affiliate-table td:last-child {
+  text-align: right;
+}
+
+
+/* Features Table - Additional margin for action buttons */
+.features-table-wrapper .vehicles-action-buttons {
+  margin-right: 30px;
+}
+
+.vehicles-btn-view {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: none;
+  background: #DBEAFE;
+  color: #1E40AF;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.vehicles-btn-view:hover {
+  background: #BFDBFE;
+}
+
+.vehicles-btn-delete {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: none;
+  background: #FEE2E2;
+  color: #DC2626;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.vehicles-btn-delete:hover {
+  background: #FECACA;
+}
+
+/* Vehicles Search Section */
+.vehicles-search-section {
+  padding: 16px;
+  border-bottom: 1px solid #E5E7EB;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+}
+
+/* Vehicles Table Wrapper - Responsive */
+.vehicles-table-wrapper {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Vehicles Content Wrapper */
+.vehicles-content-wrapper {
+  background: white;
+  border: 1px solid #E5E7EB;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+/* Vehicles Pagination */
+.vehicles-pagination-wrapper {
+  padding: 16px;
+  border-top: 1px solid #E5E7EB;
+}
+
+/* Categories Car Image */
+.vehicles-table-wrapper .affiliate-table img {
+  width: 100px;
+  height: 60px;
+  object-fit: cover;
+  border-radius: 4px;
+}
+
+/* File Upload Styles */
+.file-upload {
+  display: flex;
+  align-items: center;
+}
+
+.file-upload-label {
+  display: inline-flex;
+  align-items: center;
+  padding: 8px 16px;
+  background: transparent;
+  color: #336DFF;
+  border: 1px solid #336DFF;
+  border-radius: 8px;
+  font-family: Poppins;
+  font-weight: 500;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.file-upload-label:hover {
+  background: #BFDBFE;
+}
+
+.file-upload-label svg {
+  font-size: 16px;
+}
+
+/* Responsive Styles for Mobile */
+@media (max-width: 768px) {
+  /* Stack search and button vertically on mobile */
+  .vehicles-search-section {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .vehicles-search-section .search-container {
+    width: 100%;
+  }
+
+  .vehicles-search-section .btn-add-booking {
+    width: 100%;
+    justify-content: center;
+  }
+
+  /* Make table scrollable on mobile */
+  .vehicles-table-wrapper {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    display: block;
+  }
+
+  .vehicles-table-wrapper .affiliate-table {
+    min-width: 600px;
+    width: 100%;
+  }
+
+  /* Adjust table cell padding on mobile */
+  .vehicles-table-wrapper .affiliate-table th,
+  .vehicles-table-wrapper .affiliate-table td {
+    padding: 10px 12px;
+    font-size: 12px;
+  }
+
+  /* Adjust action buttons margin on mobile */
+  .vehicles-action-buttons {
+    margin-right: 10px;
+  }
+
+  /* Adjust header padding on mobile */
+  .vehicles-table-wrapper .affiliate-table th:last-child {
+    padding-right: 20px;
+  }
+
+  /* Adjust image size on mobile */
+  .vehicles-table-wrapper .affiliate-table img {
+    width: 80px;
+    height: 50px;
+  }
+
+  /* Pagination responsive */
+  .vehicles-pagination-wrapper {
+    flex-direction: column;
+    gap: 12px;
+    align-items: center;
+  }
+
+  .vehicles-pagination-wrapper .pagination {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+}
+
+/* Delete Confirmation Modal */
+.delete-modal-content {
+  background: white;
+  border-radius: 12px;
+  width: 90%;
+  max-width: 500px;
+  position: relative;
+  box-shadow: 0px 20px 25px -5px rgba(0, 0, 0, 0.1);
+}
+
+.delete-modal-body {
+  padding: 32px 24px;
+  text-align: center;
+}
+
+.delete-modal-question {
+  font-family: Poppins;
+  font-weight: 700;
+  font-size: 24px;
+  color: #333333;
+  margin-bottom: 24px;
+  line-height: 1.5;
+}
+
+.delete-customer-name {
+  font-family: Poppins;
+  font-weight: 700;
+  font-size: 24px;
+  color: #053094;
+  display: inline;
+}
+
+.delete-modal-buttons {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+}
+
+.btn-delete-confirm {
+  background: #FF2D55;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 12px 24px;
+  width: 100%;
+  font-family: Poppins;
+  font-weight: 400;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.delete-icon {
+  font-size: 14px;
+  color: white;
+}
+
+.btn-delete-cancel {
+  background: white;
+  color: #1F2937;
+  border: 1px solid #374151;
+  border-radius: 8px;
+  padding: 12px 24px;
+  width: 100%;
+  font-family: Poppins;
+  font-weight: 500;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.cancel-icon {
+  font-size: 14px;
+  color: #1F2937;
+}
+
