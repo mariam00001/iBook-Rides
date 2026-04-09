@@ -9,7 +9,7 @@ import Feedbacks from './components/Feedbacks/Feedbacks';
 import Teams from './components/Teams/Teams';
 import Invoicing from './components/Invoicing/Invoicing';
 import Emailhistiory from './components/Emailhistiory/Emailhistiory';
-import Company from './Setting/Company/Company';
+import Company from './setting/Company/Company';
 import Preview from './setting/Preview& Instal/Preview';
 import Payment from './setting/payment-type/Payment-type';
 import Vehicles from './components/Vehicles/Vehicles';
