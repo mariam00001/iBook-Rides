@@ -1,7 +1,7 @@
 import { Routes, Route } from 'react-router-dom';
 import BookingDashboard from './components/BookingDashboard/BookingDashboard';
 import AddNewBooking from './components/AddNewBooking/AddNewBooking';
-import Dashboard from './components/dashboard/Dashboard';
+import Dashboard from './components/Dashboard/Dashboard';
 import Drivers from './components/Drivers/Drivers';
 import Affilate from './components/Affilate/Affilate';
 import Custmors from './components/Custmors/Custmors';
