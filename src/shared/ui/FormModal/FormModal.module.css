@@ -1,0 +1,246 @@
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 16px;
+}
+
+.content {
+  background: white;
+  border-radius: 12px;
+  width: 90%;
+  max-width: 729px;
+  max-height: 90vh;
+  overflow-y: auto;
+  position: relative;
+  box-shadow: 0px 20px 25px -5px rgba(0, 0, 0, 0.1);
+  padding-top: 0.75rem;
+}
+
+.header {
+  padding: 20px 24px;
+  position: relative;
+}
+
+.title {
+  font-family: Poppins, sans-serif;
+  font-weight: 700;
+  font-size: 24px;
+  color: #111827;
+  margin: 0;
+}
+
+.close {
+  position: absolute;
+  top: 20px;
+  right: 24px;
+  background: #f3f4f6;
+  border: none;
+  border-radius: 50%;
+  font-size: 28px;
+  color: #6b7280;
+  cursor: pointer;
+  padding: 0;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  z-index: 10;
+}
+
+.close:hover {
+  color: #1f2937;
+}
+
+.body {
+  padding: 24px;
+  padding-top: 0;
+}
+
+.footer {
+  padding: 0 24px 20px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.footer .submitBtn {
+  width: 40%;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 32px;
+  margin-bottom: 16px;
+}
+
+.rowSpaced {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 32px;
+  margin-bottom: 16px;
+  padding-top: 0.5rem;
+}
+
+.group {
+  display: flex;
+  flex-direction: column;
+}
+
+.group label {
+  font-family: Poppins, sans-serif;
+  font-weight: 800;
+  font-size: 14px;
+  color: #374151;
+  margin-bottom: 8px;
+}
+
+.group input,
+.group select,
+.group textarea {
+  padding: 13.52px 23px;
+  background: #f9fafb;
+  border: 1.36px solid #d1d5db;
+  border-radius: 10.86px;
+  font-family: Poppins, sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  color: #374151;
+  width: 100%;
+}
+
+.group input:focus,
+.group select:focus,
+.group textarea:focus {
+  outline: none;
+  border-color: #3b82f6;
+}
+
+.submitBtn {
+  background-color: #02133c;
+  color: white;
+  border: none;
+  padding: 11px 24px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 400;
+  cursor: pointer;
+  font-family: Poppins, sans-serif;
+  transition: all 0.2s ease;
+}
+
+.submitBtn:hover {
+  background-color: #000a2e;
+}
+
+.fileUpload {
+  display: flex;
+  align-items: center;
+}
+
+.fileUploadBtn {
+  display: inline-flex;
+  align-items: center;
+  padding: 8px 16px;
+  background: transparent;
+  color: #336dff;
+  border: 1px solid #336dff;
+  border-radius: 8px;
+  font-family: Poppins, sans-serif;
+  font-weight: 500;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.fileUploadBtn:hover {
+  background: #bfdbfe;
+}
+
+.fileUploadBtn svg {
+  font-size: 16px;
+  margin-right: 0.5rem;
+}
+
+.fileName {
+  display: block;
+  margin-top: 0.25rem;
+  color: #6b7280;
+  font-size: 12px;
+}
+
+.sectionTitle {
+  font-family: Poppins, sans-serif;
+  font-weight: 700;
+  font-size: 18px;
+  color: #111827;
+  margin: 12px 0 8px;
+}
+
+/* Compact size variant */
+.compact {
+  width: min(720px, calc(100vw - 32px));
+  max-width: min(720px, calc(100vw - 32px));
+  height: auto;
+  max-height: min(90vh, 900px);
+  opacity: 1;
+  border-radius: 21.72px;
+  border: 1.36px solid #e5e7eb;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  padding-bottom: 0;
+}
+
+.compact .form {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.compact .body {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  padding-right: 8px;
+}
+
+.compact .footer {
+  flex-shrink: 0;
+  padding-top: 12px;
+  padding-bottom: 20px;
+  background: #ffffff;
+}
+
+@media (max-width: 768px) {
+  .row,
+  .rowSpaced {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .footer .submitBtn {
+    width: 100%;
+  }
+
+  .compact {
+    width: calc(100vw - 16px);
+    max-width: calc(100vw - 16px);
+    max-height: 92vh;
+    border-radius: 16px;
+  }
+}

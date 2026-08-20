@@ -1,0 +1,177 @@
+.card {
+  position: relative;
+  background: #ffffff;
+  border: 1px solid #e8e8e8;
+  border-radius: 16px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  padding: 28px 20px 22px;
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+  height: 100%;
+  z-index: 1;
+}
+
+.popular {
+  border: 2.5px solid #02133c;
+  box-shadow: 0 14px 36px rgba(2, 19, 60, 0.18);
+  padding: 40px 26px 28px;
+  transform: scale(1.06);
+  z-index: 2;
+  margin-top: 8px;
+  margin-bottom: 8px;
+}
+
+.badge {
+  position: absolute;
+  top: -14px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #02133c;
+  color: #ffffff;
+  font-family: Poppins, sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 6px 18px;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+
+.name {
+  font-family: Poppins, sans-serif;
+  font-size: 16px;
+  font-weight: 500;
+  color: #6b7280;
+  margin: 0 0 10px;
+  text-align: center;
+}
+
+.popular .name {
+  font-size: 17px;
+}
+
+.priceRow {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 4px;
+  margin: 0 0 22px;
+  flex-wrap: wrap;
+}
+
+.priceAmount {
+  font-family: Poppins, sans-serif;
+  font-size: 34px;
+  font-weight: 700;
+  color: #111827;
+  line-height: 1;
+}
+
+.popular .priceAmount {
+  font-size: 40px;
+}
+
+.pricePeriod {
+  font-family: Poppins, sans-serif;
+  font-size: 15px;
+  font-weight: 400;
+  color: #9ca3af;
+  line-height: 1;
+}
+
+.popular .pricePeriod {
+  font-size: 17px;
+}
+
+.features {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  flex: 1;
+}
+
+.popular .features {
+  gap: 13px;
+}
+
+.feature {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-family: Poppins, sans-serif;
+  font-size: 13px;
+  font-weight: 400;
+  color: #374151;
+  line-height: 1.35;
+}
+
+.popular .feature {
+  font-size: 14px;
+}
+
+.iconOk,
+.iconNo {
+  flex-shrink: 0;
+  margin-top: 1px;
+  font-size: 12px;
+}
+
+.iconOk {
+  color: #111827;
+}
+
+.iconNo {
+  color: #111827;
+}
+
+.cta {
+  width: 100%;
+  border-radius: 10px;
+  padding: 12px 16px;
+  font-family: Poppins, sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  border: 1px solid #d1d5db;
+  background: #ffffff;
+  color: #111827;
+  transition: background 0.15s ease;
+}
+
+.cta:hover {
+  background: #f9fafb;
+}
+
+.ctaPopular {
+  width: 100%;
+  border-radius: 10px;
+  padding: 14px 16px;
+  font-family: Poppins, sans-serif;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  background: #02133c;
+  color: #ffffff;
+  transition: background 0.15s ease;
+}
+
+.ctaPopular:hover {
+  background: #000a2e;
+}
+
+@media (max-width: 1200px) {
+  .popular {
+    transform: scale(1.03);
+  }
+}
+
+@media (max-width: 768px) {
+  .popular {
+    transform: none;
+    margin-top: 12px;
+  }
+}

@@ -1,0 +1,1047 @@
+{
+	"info": {
+		"_postman_id": "4601ab61-7983-4c05-b408-9e365e29672c",
+		"name": "iBook Rides",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "18644202"
+	},
+	"item": [
+		{
+			"name": "Auth",
+			"item": [
+				{
+					"name": "Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 200) {\r",
+									"    const response = pm.response.json();\r",
+									"\r",
+									"    if(response.data.token) {\r",
+									"        const token = response.data.token;\r",
+									"        pm.environment.set(\"token\", token);\r",
+									"    }\r",
+									"}"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\":\"admin@app.dev\",\r\n    \"password\":\"password\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/auth/login",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Register",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// if (pm.response.code === 201) {\r",
+									"//     const response = pm.response.json();\r",
+									"\r",
+									"//     if(response.data.token) {\r",
+									"//         const token = response.data.token;\r",
+									"//         pm.environment.set(\"token\", token);\r",
+									"//     }\r",
+									"// }"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\":\"Google\",\r\n    \"email\":\"google@app.com\",\r\n    \"password\":\"password\",\r\n    \"password_confirmation\":\"password\",\r\n    \"register_type\":\"company\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/auth/register",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"auth",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Logout",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 200) {\r",
+									"    pm.environment.set(\"token\", \"\");\r",
+									"}"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{url}}/auth/logout",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"auth",
+								"logout"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Logout Others",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{url}}/auth/logout-others",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"auth",
+								"logout-others"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "User",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{url}}/auth/user",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"auth",
+								"user"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Admin",
+			"item": [
+				{
+					"name": "Users",
+					"item": [
+						{
+							"name": "Users List",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{url}}/admin/users",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"admin",
+										"users"
+									],
+									"query": [
+										{
+											"key": "page",
+											"value": "1",
+											"disabled": true
+										},
+										{
+											"key": "search",
+											"value": "Youssef",
+											"disabled": true
+										},
+										{
+											"key": "role",
+											"value": "admin",
+											"disabled": true
+										},
+										{
+											"key": "package",
+											"value": "enterprise",
+											"disabled": true
+										},
+										{
+											"key": "limit",
+											"value": "10",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Single User",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{url}}/admin/users/107",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"admin",
+										"users",
+										"107"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Store User",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\":\"Ahmed AID\",\r\n    \"email\":\"ahmed.aid22@app.dev\",\r\n    \"password\": \"password\",\r\n    \"password_confirmation\": \"password\",\r\n    \"role\":\"company\",\r\n    \"plan_id\": 4\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/admin/users",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"admin",
+										"users"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Update User",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\":\"Fatma Ahmed\",\r\n    \"email\":\"fatma10006@app.com\",\r\n    \"password\":\"password\",\r\n    \"password_confirmation\":\"password\",\r\n    \"role\":\"company\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/admin/users/106",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"admin",
+										"users",
+										"106"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete User",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/admin/users/9",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"admin",
+										"users",
+										"9"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Dashboard",
+					"item": [
+						{
+							"name": "Dashboard",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{url}}/admin/dashboard",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"admin",
+										"dashboard"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Packages",
+					"item": [
+						{
+							"name": "Packages List",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{url}}/admin/packages?search=&limit=",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"admin",
+										"packages"
+									],
+									"query": [
+										{
+											"key": "search",
+											"value": ""
+										},
+										{
+											"key": "limit",
+											"value": ""
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Single Package",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{url}}/admin/packages/5",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"admin",
+										"packages",
+										"5"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Update Package",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\":\"Test Package 2\",\r\n    \"description\":\"Test description\",\r\n    \"price\": 433.33,\r\n    \"duration_days\": 60\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/admin/packages/6",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"admin",
+										"packages",
+										"6"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete Package",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/admin/packages/5",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"admin",
+										"packages",
+										"5"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Store Package",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\":\"Test Package\",\r\n    \"description\":\"Test description\",\r\n    \"price\": 333.33,\r\n    \"duration_days\": 360\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/admin/packages",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"admin",
+										"packages"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Transactions",
+					"item": [
+						{
+							"name": "Transactions List",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{url}}/admin/transactions",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"admin",
+										"transactions"
+									],
+									"query": [
+										{
+											"key": "limit",
+											"value": "15",
+											"disabled": true
+										},
+										{
+											"key": "payment_status",
+											"value": "pending",
+											"disabled": true
+										},
+										{
+											"key": "from_date",
+											"value": "2024-01-01",
+											"disabled": true
+										},
+										{
+											"key": "to_date",
+											"value": "2026-12-01",
+											"disabled": true
+										},
+										{
+											"key": "with_user",
+											"value": "1",
+											"disabled": true
+										},
+										{
+											"key": "with_package",
+											"value": "0",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Single Transaction",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{url}}/admin/transactions/5",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"admin",
+										"transactions",
+										"5"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Settings",
+					"item": [
+						{
+							"name": "Settings List",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{url}}/admin/settings",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"admin",
+										"settings"
+									],
+									"query": [
+										{
+											"key": "search",
+											"value": "Merchant Account",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Single Setting",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{url}}/admin/settings/merchant-account",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"admin",
+										"settings",
+										"merchant-account"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Store Setting",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"label\":\"Merchant Account\",\r\n    \"group\":\"payments\",\r\n    \"key\":\"merchant-account\",\r\n    // for multiaple values add an object {}\r\n    \"value\": {\r\n        \"payment_gate\": \"stripe\",\r\n        \"mode\": \"test\",\r\n        \"currency_code\": \"us\",\r\n        \"key\": \"76asasww\"\r\n    }\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/admin/settings",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"admin",
+										"settings"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Update Setting",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"label\":\"Merchant Account\",\r\n    \"group\":\"payments\",\r\n    \"key\":\"merchant-account\",\r\n    // for multiaple values add an object {}\r\n    \"value\": {\r\n        \"payment_gate\": \"stripe\",\r\n        \"mode\": \"test\",\r\n        \"currency_code\": \"us\",\r\n        \"key\": \"76asasww\"\r\n    }\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/admin/settings/merchant-account",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"admin",
+										"settings",
+										"merchant-account"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete Setting",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/admin/settings/merchant-account",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"admin",
+										"settings",
+										"merchant-account"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		}
+	]
+}
