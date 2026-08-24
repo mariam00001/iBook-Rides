@@ -327,46 +327,44 @@ function AdminPackages() {
           ) : null}
         </div>
       ) : (
-        <div className={styles.tableWrap} data-testid="admin-packages-table-wrap">
-          <DataTable columns={TABLE_COLUMNS} testId="admin-packages-table" className={styles.packagesTable}>
-            {filteredPlans.map((plan) => (
-              <tr key={plan.id}>
-                <td>
-                  <span className={styles.planName}>{plan.name}</span>
-                </td>
-                <td>
-                  <span className={styles.cellText}>{plan.tablePrice}</span>
-                </td>
-                <td>
-                  <span className={styles.cellText}>{plan.duration}</span>
-                </td>
-                <td>
-                  <span className={styles.cellText}>{plan.users}</span>
-                </td>
-                <td>
-                  <div className={t.actions}>
-                    <button
-                      type="button"
-                      className={t.editBtn}
-                      data-testid={`packages-edit-${plan.id}`}
-                      aria-label={`Edit ${plan.name}`}
-                    >
-                      <AiOutlineEdit />
-                    </button>
-                    <button
-                      type="button"
-                      className={t.deleteBtn}
-                      data-testid={`packages-delete-${plan.id}`}
-                      aria-label={`Delete ${plan.name}`}
-                    >
-                      <FaRegTrashAlt />
-                    </button>
-                  </div>
-                </td>
-              </tr>
-            ))}
-          </DataTable>
-        </div>
+        <DataTable columns={TABLE_COLUMNS} testId="admin-packages-table">
+          {filteredPlans.map((plan) => (
+            <tr key={plan.id}>
+              <td>
+                <div className={t.userName}>{plan.name}</div>
+              </td>
+              <td>
+                <div className={t.email}>{plan.tablePrice}</div>
+              </td>
+              <td>
+                <div className={t.date}>{plan.duration}</div>
+              </td>
+              <td>
+                <div className={t.date}>{plan.users}</div>
+              </td>
+              <td>
+                <div className={t.actions}>
+                  <button
+                    type="button"
+                    className={t.editBtn}
+                    data-testid={`packages-edit-${plan.id}`}
+                    aria-label={`Edit ${plan.name}`}
+                  >
+                    <AiOutlineEdit />
+                  </button>
+                  <button
+                    type="button"
+                    className={t.deleteBtn}
+                    data-testid={`packages-delete-${plan.id}`}
+                    aria-label={`Delete ${plan.name}`}
+                  >
+                    <FaRegTrashAlt />
+                  </button>
+                </div>
+              </td>
+            </tr>
+          ))}
+        </DataTable>
       )}
 
       <div className={styles.pagination}>

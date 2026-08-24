@@ -18,6 +18,7 @@ import { FiPlus, FiFileText, FiDownload } from 'react-icons/fi';
 import AdminSidebar from './AdminSidebar';
 import AdminUsers from '../AdminUsers/AdminUsers';
 import AdminPackages from '../AdminPackages/AdminPackages';
+import AdminTransactions from '../AdminTransactions/AdminTransactions';
 import profile from '../../../assets/Elipse 5.svg';
 import word from '../../../assets/icons set.svg';
 import night from '../../../assets/icons set (1).svg';
@@ -412,7 +413,7 @@ function AdminDashboard() {
             <Route index element={<AdminOverviewPage />} />
             <Route path="users" element={<AdminUsers />} />
             <Route path="packages" element={<AdminPackages />} />
-            <Route path="transactions" element={<AdminPlaceholderPage title="Transactions" />} />
+            <Route path="transactions" element={<AdminTransactions />} />
             <Route path="settings" element={<AdminPlaceholderPage title="Settings" />} />
           </Routes>
         </div>
