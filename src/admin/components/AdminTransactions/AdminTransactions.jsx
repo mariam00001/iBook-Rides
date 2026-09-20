@@ -1,157 +1,13 @@
-import { useMemo, useState } from 'react';
+﻿import { useEffect, useMemo, useState } from 'react';
 import { FaSearch, FaDownload, FaRegCalendar, FaBuilding } from 'react-icons/fa';
 import { RiArrowUpDownLine } from 'react-icons/ri';
 import DataTable, { dataTableStyles as t } from '../../../shared/ui/DataTable/DataTable';
+import BackendMissingValue from '../shared/BackendMissingValue';
+import { fetchAdminTransactions } from '../../api';
+import { displayBackendValue } from '../../types/backend';
 import styles from './AdminTransactions.module.css';
 
 const TABS = ['Today', 'Past', 'Paid'];
-
-const TRANSACTIONS = [
-  {
-    id: 1,
-    company: 'FLY LIMOUSINE',
-    email: 'info@flylimousine.ca',
-    siteUrl: 'flylimousine.ca',
-    address: '28 10 Major Mackenzie Dr. vaughan ontario 321',
-    package: 'Premium',
-    price: '100.00$',
-    dueDate: '03/11/2026',
-    accountStatus: 'Active',
-    tab: 'Today',
-  },
-  {
-    id: 2,
-    company: 'FLY LIMOUSINE',
-    email: 'info@flylimousine.ca',
-    siteUrl: 'flylimousine.ca',
-    address: '28 10 Major Mackenzie Dr. vaughan ontario 321',
-    package: 'Premium',
-    price: '100.00$',
-    dueDate: '03/11/2026',
-    accountStatus: 'Active',
-    tab: 'Today',
-  },
-  {
-    id: 3,
-    company: 'FLY LIMOUSINE',
-    email: 'info@flylimousine.ca',
-    siteUrl: 'flylimousine.ca',
-    address: '28 10 Major Mackenzie Dr. vaughan ontario 321',
-    package: 'Premium',
-    price: '100.00$',
-    dueDate: '03/11/2026',
-    accountStatus: 'Active',
-    tab: 'Today',
-  },
-  {
-    id: 4,
-    company: 'FLY LIMOUSINE',
-    email: 'info@flylimousine.ca',
-    siteUrl: 'flylimousine.ca',
-    address: '28 10 Major Mackenzie Dr. vaughan ontario 321',
-    package: 'Premium',
-    price: '100.00$',
-    dueDate: '03/11/2026',
-    accountStatus: 'Active',
-    tab: 'Today',
-  },
-  {
-    id: 5,
-    company: 'FLY LIMOUSINE',
-    email: 'info@flylimousine.ca',
-    siteUrl: 'flylimousine.ca',
-    address: '28 10 Major Mackenzie Dr. vaughan ontario 321',
-    package: 'Premium',
-    price: '100.00$',
-    dueDate: '03/11/2026',
-    accountStatus: 'Active',
-    tab: 'Today',
-  },
-  {
-    id: 6,
-    company: 'FLY LIMOUSINE',
-    email: 'info@flylimousine.ca',
-    siteUrl: 'flylimousine.ca',
-    address: '28 10 Major Mackenzie Dr. vaughan ontario 321',
-    package: 'Premium',
-    price: '100.00$',
-    dueDate: '03/11/2026',
-    accountStatus: 'Active',
-    tab: 'Today',
-  },
-  {
-    id: 7,
-    company: 'FLY LIMOUSINE',
-    email: 'info@flylimousine.ca',
-    siteUrl: 'flylimousine.ca',
-    address: '28 10 Major Mackenzie Dr. vaughan ontario 321',
-    package: 'Premium',
-    price: '100.00$',
-    dueDate: '03/11/2026',
-    accountStatus: 'Active',
-    tab: 'Today',
-  },
-  {
-    id: 8,
-    company: 'FLY LIMOUSINE',
-    email: 'info@flylimousine.ca',
-    siteUrl: 'flylimousine.ca',
-    address: '28 10 Major Mackenzie Dr. vaughan ontario 321',
-    package: 'Premium',
-    price: '100.00$',
-    dueDate: '03/11/2026',
-    accountStatus: 'Active',
-    tab: 'Today',
-  },
-  {
-    id: 9,
-    company: 'CITY RIDES',
-    email: 'ops@cityrides.com',
-    siteUrl: 'cityrides.com',
-    address: '28 10 Major Mackenzie Dr. vaughan ontario 321',
-    package: 'Basic',
-    price: '49.00$',
-    dueDate: '12/01/2024',
-    accountStatus: 'Active',
-    tab: 'Past',
-  },
-  {
-    id: 10,
-    company: 'CITY RIDES',
-    email: 'ops@cityrides.com',
-    siteUrl: 'cityrides.com',
-    address: '28 10 Major Mackenzie Dr. vaughan ontario 321',
-    package: 'Plus',
-    price: '199.00$',
-    dueDate: '11/20/2024',
-    accountStatus: 'Inactive',
-    tab: 'Past',
-  },
-  {
-    id: 11,
-    company: 'METRO CARS',
-    email: 'hello@metrocars.ca',
-    siteUrl: 'metrocars.ca',
-    address: '28 10 Major Mackenzie Dr. vaughan ontario 321',
-    package: 'Premium',
-    price: '100.00$',
-    dueDate: '10/05/2024',
-    accountStatus: 'Active',
-    tab: 'Paid',
-  },
-  {
-    id: 12,
-    company: 'METRO CARS',
-    email: 'hello@metrocars.ca',
-    siteUrl: 'metrocars.ca',
-    address: '28 10 Major Mackenzie Dr. vaughan ontario 321',
-    package: 'Trail',
-    price: '0.00$',
-    dueDate: '09/12/2024',
-    accountStatus: 'Active',
-    tab: 'Paid',
-  },
-];
 
 function SortHeader({ label }) {
   return (
@@ -162,7 +18,7 @@ function SortHeader({ label }) {
   );
 }
 
-const COLUMNS = [
+const TODAY_COLUMNS = [
   { key: 'company', label: <SortHeader label="COMPANY INFO" /> },
   { key: 'site', label: <SortHeader label="SITE URL" /> },
   { key: 'address', label: <SortHeader label="ADDRESS" /> },
@@ -173,36 +29,98 @@ const COLUMNS = [
   { key: 'account', label: <SortHeader label="ACCOUNT STATUS" /> },
 ];
 
+const PAST_PAID_COLUMNS = [
+  ...TODAY_COLUMNS,
+  { key: 'emailHistory', label: 'EMAIL HISTORY' },
+];
+
 function AdminTransactions() {
+  const [rows, setRows] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [backendBanner, setBackendBanner] = useState('');
+  const [actionError, setActionError] = useState('');
   const [activeTab, setActiveTab] = useState('Today');
   const [fromDate, setFromDate] = useState('');
   const [toDate, setToDate] = useState('');
   const [status, setStatus] = useState('All Status');
+  const [appliedFrom, setAppliedFrom] = useState('');
+  const [appliedTo, setAppliedTo] = useState('');
   const [appliedStatus, setAppliedStatus] = useState('All Status');
   const [currentPage, setCurrentPage] = useState(1);
   const entriesPerPage = 8;
 
+  useEffect(() => {
+    let active = true;
+    (async () => {
+      setLoading(true);
+      const result = await fetchAdminTransactions({
+        limit: 50,
+        from_date: appliedFrom || undefined,
+        to_date: appliedTo || undefined,
+        with_user: '1',
+        with_package: '1',
+      });
+      if (!active) return;
+      setRows(result.items);
+      setBackendBanner(result.backendMissing ? result.message : '');
+      setLoading(false);
+      setCurrentPage(1);
+    })();
+    return () => {
+      active = false;
+    };
+  }, [appliedFrom, appliedTo]);
+
   const filtered = useMemo(() => {
-    return TRANSACTIONS.filter((item) => {
+    return rows.filter((item) => {
       const matchesTab = item.tab === activeTab;
+      const account = displayBackendValue(item.accountStatus);
       const matchesStatus =
-        appliedStatus === 'All Status' || item.accountStatus === appliedStatus;
+        appliedStatus === 'All Status' ||
+        account.toLowerCase() === appliedStatus.toLowerCase();
       return matchesTab && matchesStatus;
     });
-  }, [activeTab, appliedStatus]);
+  }, [rows, activeTab, appliedStatus]);
 
   const totalPages = Math.max(1, Math.ceil(filtered.length / entriesPerPage));
   const indexOfLast = currentPage * entriesPerPage;
   const indexOfFirst = indexOfLast - entriesPerPage;
   const currentRows = filtered.slice(indexOfFirst, indexOfLast);
+  const isPastOrPaid = activeTab === 'Past' || activeTab === 'Paid';
+  const columns = isPastOrPaid ? PAST_PAID_COLUMNS : TODAY_COLUMNS;
 
   const handleSearch = () => {
+    setAppliedFrom(fromDate);
+    setAppliedTo(toDate);
     setAppliedStatus(status);
     setCurrentPage(1);
   };
 
+  const handleDownload = () => {
+    setActionError(
+      'BACKEND ENDPOINT MISSING / NOT AVAILABLE: Download Report (no export endpoint in Postman Admin/Transactions)'
+    );
+  };
+
+  const handleRowAction = () => {
+    setActionError(
+      'BACKEND ENDPOINT MISSING / NOT AVAILABLE: Send Recipet / Process Payment (no mutation endpoint in Postman)'
+    );
+  };
+
   return (
     <div className={styles.page} data-testid="admin-transactions-page">
+      {backendBanner ? (
+        <p className={styles.backendBanner} data-testid="transactions-backend-banner">
+          {backendBanner}
+        </p>
+      ) : null}
+      {actionError ? (
+        <p className={styles.backendBanner} data-testid="transactions-action-error" role="alert">
+          {actionError}
+        </p>
+      ) : null}
+
       <div className={styles.toolbar}>
         <div className={styles.tabs} role="tablist" aria-label="Transactions period">
           {TABS.map((tab) => (
@@ -226,6 +144,7 @@ function AdminTransactions() {
           type="button"
           className={styles.downloadBtn}
           data-testid="transactions-download-btn"
+          onClick={handleDownload}
         >
           <FaDownload />
           Download Report
@@ -240,7 +159,7 @@ function AdminTransactions() {
               id="tx-from-date"
               type="text"
               className={styles.dateInput}
-              placeholder="mm/dd/yyyy"
+              placeholder="yyyy-mm-dd"
               value={fromDate}
               data-testid="transactions-from-date"
               onChange={(event) => setFromDate(event.target.value)}
@@ -256,7 +175,7 @@ function AdminTransactions() {
               id="tx-to-date"
               type="text"
               className={styles.dateInput}
-              placeholder="mm/dd/yyyy"
+              placeholder="yyyy-mm-dd"
               value={toDate}
               data-testid="transactions-to-date"
               onChange={(event) => setToDate(event.target.value)}
@@ -291,62 +210,79 @@ function AdminTransactions() {
         </button>
       </div>
 
-      <DataTable columns={COLUMNS} testId="admin-transactions-table">
-        {currentRows.map((row) => (
-          <tr key={row.id}>
-            <td>
-              <div className={styles.companyInfo}>
-                <span className={styles.companyIcon}>
-                  <FaBuilding />
-                </span>
-                <div className={styles.companyText}>
-                  <div className={styles.companyName}>{row.company}</div>
-                  <div className={styles.companyEmail}>{row.email}</div>
-                </div>
-              </div>
-            </td>
-            <td>
-              <a
-                href={`https://${row.siteUrl}`}
-                className={styles.siteUrl}
-                target="_blank"
-                rel="noreferrer"
-              >
-                {row.siteUrl}
-              </a>
-            </td>
-            <td>
-              <div className={styles.address}>{row.address}</div>
-            </td>
-            <td>
-              <span className={t.planBadge}>{row.package}</span>
-            </td>
-            <td>
-              <div className={t.date}>{row.price}</div>
-            </td>
-            <td>
-              <div className={t.date}>{row.dueDate}</div>
-            </td>
-            <td>
-              <button
-                type="button"
-                className={styles.sendBtn}
-                data-testid={`transactions-send-${row.id}`}
-              >
-                Send Recipet
-              </button>
-            </td>
-            <td>
-              <span
-                className={
-                  row.accountStatus === 'Active' ? t.statusBadge : t.planBadge
-                }
-              >
-                {row.accountStatus}
-              </span>
+      <DataTable columns={columns} testId="admin-transactions-table">
+        {loading ? (
+          <tr>
+            <td colSpan={isPastOrPaid ? 9 : 8}>
+              <span className={styles.backendBanner}>Loading…</span>
             </td>
           </tr>
-        ))}
+        ) : currentRows.length === 0 ? (
+          <tr>
+            <td colSpan={isPastOrPaid ? 9 : 8}>
+              <span className={styles.backendBanner}>No results</span>
+            </td>
+          </tr>
+        ) : (
+          currentRows.map((row) => (
+            <tr key={row.id}>
+              <td>
+                <div className={styles.companyInfo}>
+                  <span className={styles.companyIcon}>
+                    <FaBuilding />
+                  </span>
+                  <div className={styles.companyText}>
+                    <div className={styles.companyName}>
+                      <BackendMissingValue field={row.company} />
+                    </div>
+                    <div className={styles.companyEmail}>
+                      <BackendMissingValue field={row.email} />
+                    </div>
+                  </div>
+                </div>
+              </td>
+              <td>
+                <BackendMissingValue field={row.siteUrl} />
+              </td>
+              <td>
+                <div className={styles.address}>
+                  <BackendMissingValue field={row.address} />
+                </div>
+              </td>
+              <td>
+                <span className={t.planBadge}>
+                  <BackendMissingValue field={row.package} />
+                </span>
+              </td>
+              <td>
+                <BackendMissingValue field={row.price} />
+              </td>
+              <td>
+                <BackendMissingValue field={row.dueDate} />
+              </td>
+              <td>
+                <button
+                  type="button"
+                  className={styles.sendBtn}
+                  data-testid={`transactions-action-${row.id}`}
+                  onClick={handleRowAction}
+                >
+                  {isPastOrPaid ? 'Process Payment' : 'Send Recipet'}
+                </button>
+              </td>
+              <td>
+                <BackendMissingValue field={row.accountStatus} />
+              </td>
+              {isPastOrPaid ? (
+                <td>
+                  <div className={styles.emailHistory}>
+                    <BackendMissingValue field={row.emailHistory} multiline />
+                  </div>
+                </td>
+              ) : null}
+            </tr>
+          ))
+        )}
       </DataTable>
 
       <div className={styles.pagination}>
@@ -359,6 +295,7 @@ function AdminTransactions() {
             type="button"
             className={styles.pageBtn}
             disabled={currentPage === 1}
+            data-testid="transactions-page-prev"
             onClick={() => setCurrentPage((page) => Math.max(1, page - 1))}
           >
             Previous
@@ -368,6 +305,7 @@ function AdminTransactions() {
               key={page}
               type="button"
               className={`${styles.pageBtn} ${currentPage === page ? styles.pageBtnActive : ''}`.trim()}
+              data-testid={`transactions-page-${page}`}
               onClick={() => setCurrentPage(page)}
             >
               {page}
@@ -377,6 +315,7 @@ function AdminTransactions() {
             type="button"
             className={styles.pageBtn}
             disabled={currentPage === totalPages}
+            data-testid="transactions-page-next"
             onClick={() => setCurrentPage((page) => Math.min(totalPages, page + 1))}
           >
             Next

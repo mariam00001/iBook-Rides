@@ -2,8 +2,22 @@
   display: flex;
   flex-direction: column;
   gap: 8px;
+  font-family: Poppins, sans-serif;
 }
 
+.backendBanner {
+  margin: 0 0 8px;
+  padding: 10px 14px;
+  border-radius: 8px;
+  background: #fff7ed;
+  border: 1px dashed #fdba74;
+  color: #9a3412;
+  font-family: Poppins, sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+/* Screenshot: search/filter in its own white card */
 .filters {
   display: flex;
   align-items: flex-end;
@@ -55,6 +69,18 @@
   border-radius: 8px;
   font-size: 14px;
   font-family: Poppins, sans-serif;
+  font-weight: 400;
+  color: #111827;
+  background: #ffffff;
+}
+
+.searchInput:focus {
+  outline: none;
+  border-color: #02133c;
+}
+
+.searchInput::placeholder {
+  color: #9ca3af;
 }
 
 .filterSelect {
@@ -63,9 +89,10 @@
   padding: 10px 36px 10px 14px;
   border: 1px solid #e5e7eb;
   border-radius: 8px;
-  background: #ffffff;
+  background-color: #ffffff;
   font-family: Poppins, sans-serif;
   font-size: 14px;
+  font-weight: 400;
   color: #111827;
   appearance: none;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%236B7280' d='M1.41 0.59L6 5.17 10.59 0.59 12 2l-6 6-6-6z'/%3E%3C/svg%3E");
@@ -73,22 +100,35 @@
   background-position: right 14px center;
 }
 
+.filterSelect:focus {
+  outline: none;
+  border-color: #02133c;
+}
+
 .searchBtn {
   height: 44px;
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   white-space: nowrap;
   background-color: #02133c;
-  color: white;
+  color: #ffffff;
   border: none;
   padding: 11px 24px;
   border-radius: 8px;
   font-size: 14px;
   font-family: Poppins, sans-serif;
+  font-weight: 500;
   cursor: pointer;
   gap: 8px;
+  flex-shrink: 0;
 }
 
+.searchBtn:hover {
+  background-color: #000e33;
+}
+
+/* Screenshot: Add button alone, right-aligned under filters */
 .toolbar {
   display: flex;
   justify-content: flex-end;
@@ -97,13 +137,131 @@
 
 .addBtn {
   background-color: #02133c;
-  color: white;
+  color: #ffffff;
   border: none;
   padding: 11px 24px;
   border-radius: 8px;
   font-size: 14px;
   font-family: Poppins, sans-serif;
+  font-weight: 500;
   cursor: pointer;
+  white-space: nowrap;
+}
+
+.addBtn:hover {
+  background-color: #000e33;
+}
+
+/* Screenshot: table in its own white card */
+.tableCard {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0px 1px 2px 0px #0000000d;
+}
+
+.tableCard :global([data-testid='admin-users-table']) {
+  border: none;
+  border-radius: 0;
+  margin-top: 0;
+  box-shadow: none;
+}
+
+.userId {
+  font-family: Poppins, sans-serif;
+  font-size: 12px;
+  color: #6b7280;
+  margin-top: 4px;
+}
+
+.contactEmail {
+  font-family: Poppins, sans-serif;
+  font-weight: 400;
+  font-size: 14px;
+  color: #111827;
+}
+
+.contactPhone {
+  font-family: Poppins, sans-serif;
+  font-weight: 400;
+  font-size: 14px;
+  color: #4b5563;
+  margin-top: 4px;
+}
+
+.paymentDate {
+  font-family: Poppins, sans-serif;
+  font-weight: 400;
+  font-size: 14px;
+  color: #4b5563;
+}
+
+.statusOk {
+  padding: 4px 14px;
+  background: #dcfce7;
+  color: #166534;
+  border-radius: 999px;
+  border: 1.41px solid #bbf7d0;
+  font-size: 12px;
+  font-family: Poppins, sans-serif;
+  font-weight: 600;
+  display: inline-block;
+}
+
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  padding: 16px 20px;
+  border-top: 1px solid #e5e7eb;
+  background: #ffffff;
+}
+
+.paginationInfo {
+  font-family: Poppins, sans-serif;
+  font-size: 13px;
+  font-weight: 400;
+  color: #6b7280;
+}
+
+.paginationBtns {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.pageBtn {
+  min-width: 36px;
+  height: 36px;
+  padding: 0 12px;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  background: #ffffff;
+  color: #374151;
+  font-family: Poppins, sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.pageBtn:hover:not(:disabled) {
+  border-color: #02133c;
+  color: #02133c;
+}
+
+.pageBtnActive {
+  background: #02133c;
+  border-color: #02133c;
+  color: #ffffff;
+}
+
+.pageBtn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
 @media (max-width: 768px) {

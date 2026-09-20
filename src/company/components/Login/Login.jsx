@@ -1,7 +1,7 @@
 ﻿import { useState } from 'react';
 import { useNavigate, Navigate } from 'react-router-dom';
 import logo from '../../../assets/logo (5) 1.svg';
-import { DEMO_ACCOUNTS, getAuth, loginWithCredentials } from '../../../auth/authStorage';
+import { DEMO_ACCOUNTS, getAuth, loginWithApi } from '../../../auth/authStorage';
 import './Login.css';
 
 function Login() {
@@ -10,6 +10,7 @@ function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [submitting, setSubmitting] = useState(false);
 
   if (existing) {
     return existing.role === 'admin' ? (
@@ -19,18 +20,23 @@ function Login() {
     );
   }
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
-    const session = loginWithCredentials(email, password);
-    if (!session) {
-      setError('Invalid email or password. Please try again.');
-      return;
-    }
-    if (session.role === 'admin') {
-      navigate('/admin', { replace: true });
-    } else {
-      navigate('/home', { replace: true });
+    setSubmitting(true);
+    try {
+      const session = await loginWithApi(email, password);
+      if (!session) {
+        setError('Invalid email or password. Please try again.');
+        return;
+      }
+      if (session.role === 'admin') {
+        navigate('/admin', { replace: true });
+      } else {
+        navigate('/home', { replace: true });
+      }
+    } finally {
+      setSubmitting(false);
     }
   };
 
@@ -79,8 +85,13 @@ function Login() {
               autoComplete="current-password"
             />
           </div>
-          <button type="submit" className="login-submit" data-testid="login-submit">
-            Sign in
+          <button
+            type="submit"
+            className="login-submit"
+            data-testid="login-submit"
+            disabled={submitting}
+          >
+            {submitting ? 'Signing in…' : 'Sign in'}
           </button>
         </form>
 

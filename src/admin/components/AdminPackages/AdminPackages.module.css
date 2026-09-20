@@ -4,6 +4,17 @@
   gap: 16px;
 }
 
+.backendBanner {
+  margin: 0;
+  padding: 10px 14px;
+  border-radius: 8px;
+  background: #fff7ed;
+  border: 1px dashed #fdba74;
+  color: #9a3412;
+  font-family: Poppins, sans-serif;
+  font-size: 13px;
+}
+
 .filters {
   display: flex;
   align-items: flex-end;
@@ -169,6 +180,40 @@ color: #314158;
   text-align: center;
   box-shadow: 0 4px 12px rgba(2, 19, 60, 0.2);
   align-self: center;
+}
+
+/* Packages table: even cell spacing + Actions pinned to the end */
+.packagesTable {
+  width: 100%;
+}
+
+.packagesTable :global(table) {
+  width: 100%;
+  table-layout: fixed;
+}
+
+.packagesTable :global(th),
+.packagesTable :global(td) {
+  padding: 16px 20px;
+  vertical-align: middle;
+}
+
+.packagesTable :global(th:last-child),
+.packagesTable :global(td:last-child) {
+  text-align: right;
+  width: 120px;
+}
+
+.actionsCell {
+  text-align: right;
+}
+
+.actionsEnd {
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  width: 100%;
 }
 
 .pagination {

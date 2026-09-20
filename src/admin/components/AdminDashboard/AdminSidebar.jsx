@@ -1,8 +1,10 @@
-﻿import { Link, useLocation } from 'react-router-dom';
+﻿import { useEffect, useState } from 'react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import logo from '../../../assets/logo (5) 1.svg';
 import '../../../company/components/Sidebar/Sidebar.css';
-import { LuLayoutDashboard, LuUsers, LuPackage, LuWallet } from 'react-icons/lu';
+import { LuLayoutDashboard, LuUsers, LuPackage, LuWallet, LuLogOut } from 'react-icons/lu';
 import { FiSettings } from 'react-icons/fi';
+import { logoutWithApi } from '../../../auth/authStorage';
 
 const menuItems = [
   { path: '/admin', icon: 'overview', label: 'Overview', end: true },
@@ -14,6 +16,12 @@ const menuItems = [
 
 function AdminSidebar({ isOpen, onClose }) {
   const location = useLocation();
+  const navigate = useNavigate();
+  const [loggingOut, setLoggingOut] = useState(false);
+
+  useEffect(() => {
+    return () => setLoggingOut(false);
+  }, []);
 
   const isActive = (path, end) => {
     if (end) {
@@ -36,6 +44,17 @@ function AdminSidebar({ isOpen, onClose }) {
   const handleLinkClick = () => {
     if (typeof onClose === 'function' && window.innerWidth <= 1024) {
       onClose();
+    }
+  };
+
+  const handleLogout = async () => {
+    if (loggingOut) return;
+    setLoggingOut(true);
+    try {
+      await logoutWithApi();
+      navigate('/login', { replace: true });
+    } finally {
+      setLoggingOut(false);
     }
   };
 
@@ -73,6 +92,24 @@ function AdminSidebar({ isOpen, onClose }) {
             </Link>
           ))}
         </nav>
+
+        <div className="sidebar-footer admin-sidebar-footer">
+          <button
+            type="button"
+            className="sidebar-item admin-logout-btn"
+            data-testid="admin-logout-btn"
+            onClick={handleLogout}
+            disabled={loggingOut}
+            aria-label="Log out"
+          >
+            <div className="sidebar-item-content">
+              <span className="sidebar-icon">
+                <LuLogOut size={16} />
+              </span>
+              <span className="sidebar-label">{loggingOut ? 'Logging out…' : 'Log out'}</span>
+            </div>
+          </button>
+        </div>
       </div>
     </>
   );

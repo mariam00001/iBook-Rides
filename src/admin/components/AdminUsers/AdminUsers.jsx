@@ -1,14 +1,16 @@
-import { useEffect, useRef, useState } from 'react';
+﻿import { useEffect, useRef, useState } from 'react';
 import { FaSearch, FaRegTrashAlt } from 'react-icons/fa';
 import { AiOutlineEdit } from 'react-icons/ai';
-import { LuUser } from 'react-icons/lu';
+import { RiUserLine } from 'react-icons/ri';
 import DataTable, { dataTableStyles as t } from '../../../shared/ui/DataTable/DataTable';
 import FormModal, {
   FormField,
   FormRow,
   FileUploadField,
-  formModalStyles as m,
 } from '../../../shared/ui/FormModal/FormModal';
+import BackendMissingValue from '../shared/BackendMissingValue';
+import { AdminApiError, deleteAdminUser, fetchAdminUsers, storeAdminUser } from '../../api';
+import { displayBackendValue } from '../../types/backend';
 import styles from './AdminUsers.module.css';
 
 const COLUMNS = [
@@ -20,44 +22,7 @@ const COLUMNS = [
   { key: 'actions', label: 'Actions' },
 ];
 
-const INITIAL_USERS = [
-  {
-    id: 'u001',
-    name: 'Ahmed Hassan',
-    email: 'ahmed.hassan@email.com',
-    phone: '+20 100 123 4567',
-    plan: 'Premium',
-    status: 'Active',
-    lastPayment: '2024-01-01',
-  },
-  {
-    id: 'u002',
-    name: 'Ahmed Hassan',
-    email: 'ahmed.hassan@email.com',
-    phone: '+20 100 123 4567',
-    plan: 'Basic',
-    status: 'Active',
-    lastPayment: '2024-01-01',
-  },
-  {
-    id: 'u003',
-    name: 'Ahmed Hassan',
-    email: 'ahmed.hassan@email.com',
-    phone: '+20 100 123 4567',
-    plan: 'Trail',
-    status: 'Active',
-    lastPayment: '2024-01-01',
-  },
-  {
-    id: 'u004',
-    name: 'Ahmed Hassan',
-    email: 'ahmed.hassan@email.com',
-    phone: '+20 100 123 4567',
-    plan: 'Plus',
-    status: 'Active',
-    lastPayment: '2024-01-01',
-  },
-];
+const ENTRIES_PER_PAGE = 5;
 
 const EMPTY_FORM = {
   companyName: '',
@@ -75,7 +40,10 @@ const EMPTY_FORM = {
 };
 
 function AdminUsers() {
-  const [users, setUsers] = useState(INITIAL_USERS);
+  const [users, setUsers] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [backendBanner, setBackendBanner] = useState('');
+  const [actionError, setActionError] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
   const [filterPlan, setFilterPlan] = useState('Plan');
   const [appliedSearch, setAppliedSearch] = useState('');
@@ -83,26 +51,68 @@ function AdminUsers() {
   const [showModal, setShowModal] = useState(false);
   const [formData, setFormData] = useState(EMPTY_FORM);
   const [uploadFile, setUploadFile] = useState(null);
+  const [submitting, setSubmitting] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
   const fileInputRef = useRef(null);
 
   useEffect(() => () => setUploadFile(null), []);
 
+  const loadUsers = async () => {
+    setLoading(true);
+    const result = await fetchAdminUsers({
+      search: appliedSearch || undefined,
+      package: appliedFilter !== 'Plan' ? appliedFilter.toLowerCase() : undefined,
+      limit: 50,
+    });
+    setUsers(result.items);
+    setBackendBanner(result.backendMissing ? result.message : '');
+    setLoading(false);
+  };
+
+  useEffect(() => {
+    let active = true;
+    (async () => {
+      setLoading(true);
+      const result = await fetchAdminUsers({
+        search: appliedSearch || undefined,
+        package: appliedFilter !== 'Plan' ? appliedFilter.toLowerCase() : undefined,
+        limit: 50,
+      });
+      if (!active) return;
+      setUsers(result.items);
+      setBackendBanner(result.backendMissing ? result.message : '');
+      setLoading(false);
+      setCurrentPage(1);
+    })();
+    return () => {
+      active = false;
+    };
+  }, [appliedSearch, appliedFilter]);
+
   const filteredUsers = users.filter((user) => {
     const query = appliedSearch.trim().toLowerCase();
+    const name = displayBackendValue(user.name).toLowerCase();
+    const email = displayBackendValue(user.email).toLowerCase();
+    const plan = displayBackendValue(user.plan).toLowerCase();
     const matchesSearch =
       !query ||
-      user.name.toLowerCase().includes(query) ||
-      user.email.toLowerCase().includes(query) ||
-      user.id.toLowerCase().includes(query) ||
-      user.phone.toLowerCase().includes(query);
+      name.includes(query) ||
+      email.includes(query) ||
+      String(user.id).toLowerCase().includes(query);
     const matchesPlan =
-      appliedFilter === 'Plan' || user.plan.toLowerCase() === appliedFilter.toLowerCase();
+      appliedFilter === 'Plan' || plan === appliedFilter.toLowerCase();
     return matchesSearch && matchesPlan;
   });
+
+  const totalPages = Math.max(1, Math.ceil(filteredUsers.length / ENTRIES_PER_PAGE));
+  const indexOfLast = currentPage * ENTRIES_PER_PAGE;
+  const indexOfFirst = indexOfLast - ENTRIES_PER_PAGE;
+  const currentUsers = filteredUsers.slice(indexOfFirst, indexOfLast);
 
   const handleSearch = () => {
     setAppliedSearch(searchTerm);
     setAppliedFilter(filterPlan);
+    setCurrentPage(1);
   };
 
   const handleInputChange = (event) => {
@@ -117,25 +127,85 @@ function AdminUsers() {
     if (fileInputRef.current) fileInputRef.current.value = '';
   };
 
-  const handleSubmit = () => {
-    const nextId = `u${String(users.length + 1).padStart(3, '0')}`;
-    setUsers((prev) => [
-      {
-        id: nextId,
-        name: formData.contactPersonName || formData.companyName || 'New Subscriber',
-        email: formData.loginEmail || formData.emailAddress || '—',
-        phone: formData.phoneNumber || '—',
-        plan: 'Basic',
-        status: 'Active',
-        lastPayment: new Date().toISOString().slice(0, 10),
-      },
-      ...prev,
-    ]);
-    closeModal();
+  const handleSubmit = async () => {
+    setActionError('');
+    const apiPayload = {
+      name: formData.contactPersonName || formData.companyName || 'Subscriber',
+      email: formData.loginEmail || formData.emailAddress,
+      password: formData.password || 'password',
+      password_confirmation: formData.password || 'password',
+      role: 'company',
+      plan_id: 4,
+    };
+
+    // UI form fields not accepted by POST /admin/users (Postman contract):
+    // companyName, siteUrl, city, state, phoneNumber, country, zipCode, notes, upload
+    setSubmitting(true);
+    try {
+      await storeAdminUser(apiPayload);
+      closeModal();
+      await loadUsers();
+    } catch (error) {
+      setActionError(
+        error instanceof AdminApiError
+          ? error.message
+          : 'Failed to create subscriber'
+      );
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  const handleDelete = async (id) => {
+    setActionError('');
+    try {
+      await deleteAdminUser(id);
+      setUsers((prev) => {
+        const next = prev.filter((item) => item.id !== id);
+        const nextFilteredCount = next.filter((user) => {
+          const query = appliedSearch.trim().toLowerCase();
+          const name = displayBackendValue(user.name).toLowerCase();
+          const email = displayBackendValue(user.email).toLowerCase();
+          const plan = displayBackendValue(user.plan).toLowerCase();
+          const matchesSearch =
+            !query ||
+            name.includes(query) ||
+            email.includes(query) ||
+            String(user.id).toLowerCase().includes(query);
+          const matchesPlan =
+            appliedFilter === 'Plan' || plan === appliedFilter.toLowerCase();
+          return matchesSearch && matchesPlan;
+        }).length;
+        const pages = Math.max(1, Math.ceil(nextFilteredCount / ENTRIES_PER_PAGE));
+        setCurrentPage((page) => Math.min(page, pages));
+        return next;
+      });
+    } catch (error) {
+      setActionError(
+        error instanceof AdminApiError ? error.message : 'Failed to delete user'
+      );
+    }
+  };
+
+  const handleEditClick = () => {
+    setActionError(
+      'BACKEND ENDPOINT MISSING / NOT AVAILABLE: Edit User form UI is not present. PATCH /admin/users/:id exists on backend.'
+    );
   };
 
   return (
     <div className={styles.page} data-testid="admin-users-page">
+      {backendBanner ? (
+        <p className={styles.backendBanner} data-testid="admin-users-backend-banner">
+          {backendBanner}
+        </p>
+      ) : null}
+      {actionError ? (
+        <p className={styles.backendBanner} data-testid="admin-users-action-error" role="alert">
+          {actionError}
+        </p>
+      ) : null}
+
       <div className={styles.filters} data-testid="admin-users-filters">
         <div className={styles.field}>
           <label htmlFor="admin-users-search">Search</label>
@@ -195,60 +265,133 @@ function AdminUsers() {
         </button>
       </div>
 
-      <DataTable columns={COLUMNS} testId="admin-users-table">
-        {filteredUsers.map((user) => (
-          <tr key={user.id}>
-            <td>
-              <div className={t.userCell}>
-                <div className={t.avatar}>
-                  <LuUser />
-                </div>
-                <div>
-                  <div className={t.userName}>{user.name}</div>
-                  <div className={t.email}>ID: {user.id}</div>
-                </div>
-              </div>
-            </td>
-            <td>
-              <div className={t.email}>{user.email}</div>
-              <div className={t.phone}>{user.phone}</div>
-            </td>
-            <td>
-              <span className={t.planBadge}>{user.plan}</span>
-            </td>
-            <td>
-              <span className={t.statusBadge}>{user.status}</span>
-            </td>
-            <td className={t.date}>{user.lastPayment}</td>
-            <td>
-              <div className={t.actions}>
-                <button
-                  type="button"
-                  className={t.editBtn}
-                  data-testid={`admin-users-edit-${user.id}`}
-                  aria-label={`Edit ${user.name}`}
-                >
-                  <AiOutlineEdit />
-                </button>
-                <button
-                  type="button"
-                  className={t.deleteBtn}
-                  data-testid={`admin-users-delete-${user.id}`}
-                  aria-label={`Delete ${user.name}`}
-                  onClick={() => setUsers((prev) => prev.filter((item) => item.id !== user.id))}
-                >
-                  <FaRegTrashAlt />
-                </button>
-              </div>
-            </td>
-          </tr>
-        ))}
-      </DataTable>
+      <div className={styles.tableCard}>
+        <DataTable columns={COLUMNS} testId="admin-users-table">
+          {loading ? (
+            <tr>
+              <td colSpan={6}>
+                <span className={styles.backendBanner}>Loading…</span>
+              </td>
+            </tr>
+          ) : currentUsers.length === 0 ? (
+            <tr>
+              <td colSpan={6}>
+                <span className={styles.backendBanner}>No results</span>
+              </td>
+            </tr>
+          ) : (
+            currentUsers.map((user) => (
+              <tr key={user.id}>
+                <td>
+                  <div className={t.userCell}>
+                    <div className={t.avatar}>
+                      <RiUserLine />
+                    </div>
+                    <div>
+                      <div className={t.userName}>
+                        <BackendMissingValue field={user.name} />
+                      </div>
+                      <div className={styles.userId}>ID: {user.id}</div>
+                    </div>
+                  </div>
+                </td>
+                <td>
+                  <div className={styles.contactEmail}>
+                    <BackendMissingValue field={user.email} />
+                  </div>
+                  <div className={styles.contactPhone}>
+                    <BackendMissingValue field={user.phone} />
+                  </div>
+                </td>
+                <td>
+                  <span className={t.planBadge}>
+                    <BackendMissingValue field={user.plan} />
+                  </span>
+                </td>
+                <td>
+                  {user.status?.backendStatus === 'ok' ? (
+                    <span className={styles.statusOk}>
+                      <BackendMissingValue field={user.status} />
+                    </span>
+                  ) : (
+                    <BackendMissingValue field={user.status} />
+                  )}
+                </td>
+                <td>
+                  <div className={styles.paymentDate}>
+                    <BackendMissingValue field={user.lastPayment} />
+                  </div>
+                </td>
+                <td>
+                  <div className={t.actions}>
+                    <button
+                      type="button"
+                      className={t.editBtn}
+                      data-testid={`admin-users-edit-${user.id}`}
+                      aria-label={`Edit ${displayBackendValue(user.name)}`}
+                      onClick={handleEditClick}
+                    >
+                      <AiOutlineEdit />
+                    </button>
+                    <button
+                      type="button"
+                      className={t.deleteBtn}
+                      data-testid={`admin-users-delete-${user.id}`}
+                      aria-label={`Delete ${displayBackendValue(user.name)}`}
+                      onClick={() => handleDelete(user.id)}
+                    >
+                      <FaRegTrashAlt />
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            ))
+          )}
+        </DataTable>
+
+        <div className={styles.pagination} data-testid="admin-users-pagination">
+          <span className={styles.paginationInfo}>
+            Showing {filteredUsers.length === 0 ? 0 : indexOfFirst + 1} to{' '}
+            {Math.min(indexOfLast, filteredUsers.length)} of {filteredUsers.length} results
+          </span>
+          <div className={styles.paginationBtns}>
+            <button
+              type="button"
+              className={styles.pageBtn}
+              disabled={currentPage === 1}
+              data-testid="admin-users-page-prev"
+              onClick={() => setCurrentPage((page) => Math.max(1, page - 1))}
+            >
+              Previous
+            </button>
+            {Array.from({ length: totalPages }, (_, index) => index + 1).map((page) => (
+              <button
+                key={page}
+                type="button"
+                className={`${styles.pageBtn} ${currentPage === page ? styles.pageBtnActive : ''}`.trim()}
+                data-testid={`admin-users-page-${page}`}
+                onClick={() => setCurrentPage(page)}
+              >
+                {page}
+              </button>
+            ))}
+            <button
+              type="button"
+              className={styles.pageBtn}
+              disabled={currentPage === totalPages}
+              data-testid="admin-users-page-next"
+              onClick={() => setCurrentPage((page) => Math.min(totalPages, page + 1))}
+            >
+              Next
+            </button>
+          </div>
+        </div>
+      </div>
 
       <FormModal
         open={showModal}
         title="Add Subscriber"
-        submitLabel="+ Add Category"
+        submitLabel={submitting ? 'Saving…' : '+ Add Category'}
         onClose={closeModal}
         onSubmit={handleSubmit}
         testId="add-subscriber-modal"
@@ -275,118 +418,50 @@ function AdminUsers() {
         </FormRow>
         <FormRow>
           <FormField label="City">
-            <input
-              name="city"
-              value={formData.city}
-              onChange={handleInputChange}
-              data-testid="subscriber-city"
-            />
+            <input name="city" value={formData.city} onChange={handleInputChange} data-testid="subscriber-city" />
           </FormField>
           <FormField label="State">
-            <input
-              name="state"
-              value={formData.state}
-              onChange={handleInputChange}
-              data-testid="subscriber-state"
-            />
+            <input name="state" value={formData.state} onChange={handleInputChange} data-testid="subscriber-state" />
           </FormField>
         </FormRow>
         <FormRow>
           <FormField label="Phone Number">
-            <input
-              name="phoneNumber"
-              value={formData.phoneNumber}
-              onChange={handleInputChange}
-              data-testid="subscriber-phone"
-            />
+            <input name="phoneNumber" value={formData.phoneNumber} onChange={handleInputChange} data-testid="subscriber-phone" />
           </FormField>
           <FormField label="Email Address">
-            <input
-              name="emailAddress"
-              type="email"
-              value={formData.emailAddress}
-              onChange={handleInputChange}
-              data-testid="subscriber-email"
-            />
+            <input name="emailAddress" value={formData.emailAddress} onChange={handleInputChange} data-testid="subscriber-email" />
           </FormField>
         </FormRow>
         <FormRow>
           <FormField label="Country">
-            <select
-              name="country"
-              value={formData.country}
-              onChange={handleInputChange}
-              data-testid="subscriber-country"
-            >
-              <option value="">add</option>
-              <option value="Egypt">Egypt</option>
-              <option value="United States">United States</option>
-              <option value="United Kingdom">United Kingdom</option>
-              <option value="Germany">Germany</option>
-              <option value="France">France</option>
-            </select>
+            <input name="country" value={formData.country} onChange={handleInputChange} data-testid="subscriber-country" />
           </FormField>
-          <FormField label="ZIP Code">
-            <input
-              name="zipCode"
-              value={formData.zipCode}
-              onChange={handleInputChange}
-              data-testid="subscriber-zip"
-            />
+          <FormField label="Zip Code">
+            <input name="zipCode" value={formData.zipCode} onChange={handleInputChange} data-testid="subscriber-zip" />
           </FormField>
         </FormRow>
-
-        <h4 className={m.sectionTitle}>Login Information</h4>
         <FormRow>
           <FormField label="Contact Person Name">
-            <input
-              name="contactPersonName"
-              placeholder="enter name"
-              value={formData.contactPersonName}
-              onChange={handleInputChange}
-              data-testid="subscriber-contact-name"
-            />
+            <input name="contactPersonName" value={formData.contactPersonName} onChange={handleInputChange} data-testid="subscriber-contact-person" />
           </FormField>
           <FormField label="Login Email">
-            <input
-              name="loginEmail"
-              type="email"
-              value={formData.loginEmail}
-              onChange={handleInputChange}
-              data-testid="subscriber-login-email"
-            />
+            <input name="loginEmail" value={formData.loginEmail} onChange={handleInputChange} data-testid="subscriber-login-email" />
           </FormField>
         </FormRow>
         <FormRow>
           <FormField label="Password">
-            <input
-              name="password"
-              type="password"
-              value={formData.password}
-              onChange={handleInputChange}
-              data-testid="subscriber-password"
-            />
+            <input name="password" type="password" value={formData.password} onChange={handleInputChange} data-testid="subscriber-password" />
           </FormField>
           <FormField label="Notes">
-            <input
-              name="notes"
-              value={formData.notes}
-              onChange={handleInputChange}
-              data-testid="subscriber-notes"
-            />
+            <input name="notes" value={formData.notes} onChange={handleInputChange} data-testid="subscriber-notes" />
           </FormField>
         </FormRow>
-
-        <h4 className={m.sectionTitle}>IMG Upload</h4>
-        <FormRow>
-          <FileUploadField
-            inputRef={fileInputRef}
-            fileName={uploadFile?.name}
-            onChange={(event) => setUploadFile(event.target.files?.[0] || null)}
-            inputId="subscriber-image-upload"
-            testId="subscriber-img-upload"
-          />
-        </FormRow>
+        <FileUploadField
+          inputRef={fileInputRef}
+          fileName={uploadFile?.name || null}
+          onChange={(event) => setUploadFile(event.target.files?.[0] || null)}
+          testId="subscriber-upload"
+        />
       </FormModal>
     </div>
   );

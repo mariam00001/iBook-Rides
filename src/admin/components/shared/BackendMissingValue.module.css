@@ -1,0 +1,19 @@
+.value {
+  font-family: inherit;
+  font-size: inherit;
+  font-weight: inherit;
+  color: inherit;
+  line-height: inherit;
+}
+
+.missing {
+  color: #9a3412;
+  background: #fff7ed;
+  border: 1px dashed #fdba74;
+  border-radius: 6px;
+  padding: 2px 8px;
+  font-size: 12px;
+  font-weight: 500;
+  display: inline-block;
+  max-width: 100%;
+}

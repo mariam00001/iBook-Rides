@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { Routes, Route, useLocation } from 'react-router-dom';
+import { useEffect, useMemo, useState } from 'react';
+import { Routes, Route, useLocation, useNavigate } from 'react-router-dom';
 import { Line, Pie } from 'react-chartjs-2';
 import {
   Chart as ChartJS,
@@ -19,6 +19,8 @@ import AdminSidebar from './AdminSidebar';
 import AdminUsers from '../AdminUsers/AdminUsers';
 import AdminPackages from '../AdminPackages/AdminPackages';
 import AdminTransactions from '../AdminTransactions/AdminTransactions';
+import AdminSettings from '../AdminSettings/AdminSettings';
+import { fetchAdminDashboard } from '../../api';
 import profile from '../../../assets/Elipse 5.svg';
 import word from '../../../assets/icons set.svg';
 import night from '../../../assets/icons set (1).svg';
@@ -50,22 +52,54 @@ const WEEK_LABELS = ['Week 1', 'Week 2', 'Week 3', 'Week 4'];
 const CHART_NAVY = '#000a2e';
 const CHART_BLUE = '#003cc7';
 const CHART_LAVENDER = '#a6bcfc';
+const PIE_ORDER = ['Basic Plan', 'Premium Plan', 'Enterprise Plan'];
+const PIE_COLORS = [CHART_BLUE, CHART_NAVY, CHART_LAVENDER];
 
-function buildWavyGrowthSeries() {
+function getStatText(stats, key, fallback = '—') {
+  const field = stats.find((item) => item.key === key)?.value;
+  if (!field || field.backendStatus !== 'ok' || field.value == null || field.value === '') {
+    return fallback;
+  }
+  return String(field.value);
+}
+
+function withDollar(value) {
+  if (value == null || value === '' || value === '—' || value === '…') return value;
+  const text = String(value).trim();
+  if (text.startsWith('$')) return text;
+  return `$${text.replace(/^\$/, '')}`;
+}
+
+/**
+ * Keep the original wavy chart design; bend mid-points between real weekly API values.
+ */
+function buildWavyGrowthSeries(apiPoints = []) {
+  const weekValues = WEEK_LABELS.map((label, index) => {
+    const match = apiPoints.find((point) => point.label === label);
+    if (match?.value?.backendStatus === 'ok' && match.value.value != null) {
+      return Number(match.value.value);
+    }
+    return apiPoints[index]?.value?.backendStatus === 'ok'
+      ? Number(apiPoints[index].value.value)
+      : 0;
+  });
+
   const labels = [];
   const data = [];
 
   WEEK_LABELS.forEach((week, weekIndex) => {
+    const start = weekValues[weekIndex] ?? 0;
+    const end = weekValues[Math.min(weekIndex + 1, weekValues.length - 1)] ?? start;
+
     for (let i = 0; i < POINTS_PER_WEEK; i += 1) {
       const isWeekLabel = i === POINTS_PER_WEEK - 1;
       labels.push(isWeekLabel ? week : '');
 
-      const progress = weekIndex + i / POINTS_PER_WEEK;
-      // Matches design: ~700$ → ~400$ with soft scalloped dips
-      const trend = 700 - progress * 75;
-      const scallop = Math.sin(i * 0.95) * 32;
-      const ripple = Math.sin((weekIndex * POINTS_PER_WEEK + i) * 0.42) * 12;
-      data.push(Math.round(Math.max(40, trend + scallop + ripple)));
+      const t = i / POINTS_PER_WEEK;
+      const base = start + (end - start) * t;
+      const scallop = Math.sin(i * 0.95) * Math.max(8, Math.abs(end - start) * 0.08 + 6);
+      const ripple = Math.sin((weekIndex * POINTS_PER_WEEK + i) * 0.42) * 4;
+      data.push(Math.round(Math.max(0, base + scallop + ripple)));
     }
   });
 
@@ -73,8 +107,42 @@ function buildWavyGrowthSeries() {
 }
 
 function AdminOverviewPage() {
+  const navigate = useNavigate();
   const [period, setPeriod] = useState('1M');
-  const wavySeries = buildWavyGrowthSeries();
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+  const [dashboard, setDashboard] = useState(null);
+
+  useEffect(() => {
+    let active = true;
+    (async () => {
+      setLoading(true);
+      setError('');
+      try {
+        const data = await fetchAdminDashboard(period);
+        if (!active) return;
+        setDashboard(data);
+      } catch (err) {
+        if (!active) return;
+        setDashboard(null);
+        setError(err?.message || 'BACKEND ENDPOINT MISSING / NOT AVAILABLE');
+      } finally {
+        if (active) setLoading(false);
+      }
+    })();
+    return () => {
+      active = false;
+    };
+  }, [period]);
+
+  const stats = dashboard?.stats || [];
+  const growthPoints = dashboard?.subscriptionGrowth || [];
+  const revenueBreakdown = dashboard?.revenueBreakdown || [];
+
+  const wavySeries = useMemo(
+    () => buildWavyGrowthSeries(growthPoints),
+    [growthPoints]
+  );
 
   const lineData = {
     labels: wavySeries.labels,
@@ -107,7 +175,12 @@ function AdminOverviewPage() {
     layout: { padding: { top: 0, right: 0, bottom: 0, left: 0 } },
     plugins: {
       legend: { display: false },
-      tooltip: { enabled: true },
+      tooltip: {
+        enabled: true,
+        callbacks: {
+          label: (ctx) => `$${Number(ctx.raw ?? 0).toLocaleString()}`,
+        },
+      },
     },
     scales: {
       y: {
@@ -117,9 +190,9 @@ function AdminOverviewPage() {
         ticks: {
           stepSize: 200,
           callback: (value) => {
-            if (value === 0) return '0';
-            if (value === 1000) return '1k$';
-            return `${value}$`;
+            if (value === 0) return '$0';
+            if (value === 1000) return '$1k';
+            return `$${value}`;
           },
           font: { family: 'Poppins', size: 11 },
           color: '#888888',
@@ -153,12 +226,30 @@ function AdminOverviewPage() {
     },
   };
 
+  const legendItems = PIE_ORDER.map((label, index) => {
+    const match = revenueBreakdown.find(
+      (row) => row.label.toLowerCase() === label.toLowerCase()
+    );
+    const rawAmount =
+      match?.amountLabel ||
+      (match?.value?.backendStatus === 'ok' ? String(match.value.value) : '—');
+    const amount = loading ? '…' : withDollar(rawAmount);
+    const pct = match?.pctLabel || '—';
+    return {
+      label,
+      amount,
+      pct: loading ? '…' : pct,
+      color: PIE_COLORS[index],
+      numeric: match?.value?.backendStatus === 'ok' ? Number(match.value.value) : 0,
+    };
+  });
+
   const pieData = {
-    labels: ['Basic Plan', 'Premium Plan', 'Enterprise Plan'],
+    labels: legendItems.map((item) => item.label),
     datasets: [
       {
-        data: [45, 35, 20],
-        backgroundColor: [CHART_BLUE, CHART_NAVY, CHART_LAVENDER],
+        data: legendItems.map((item) => item.numeric),
+        backgroundColor: PIE_COLORS,
         borderWidth: 0,
         hoverOffset: 0,
       },
@@ -171,22 +262,37 @@ function AdminOverviewPage() {
     cutout: 0,
     plugins: {
       legend: { display: false },
-      tooltip: { enabled: true },
+      tooltip: {
+        enabled: true,
+        callbacks: {
+          label: (ctx) => `$${Number(ctx.raw ?? 0).toLocaleString()}`,
+        },
+      },
     },
   };
 
-  const legendItems = [
-    { label: 'Basic Plan', amount: '$380,450', pct: '45%', color: CHART_BLUE },
-    { label: 'Premium Plan', amount: '$296,650', pct: '35%', color: CHART_NAVY },
-    { label: 'Enterprise Plan', amount: '$170,190', pct: '20%', color: CHART_LAVENDER },
-  ];
+  const pieTotalAmount = loading
+    ? '…'
+    : withDollar(getStatText(stats, 'revenue', legendItems[2]?.amount || '—'));
+  const pieTotalPct = loading ? '…' : '100%';
 
   return (
     <div data-testid="admin-overview">
+      {error ? (
+        <p className="admin-api-banner" data-testid="admin-overview-error">
+          {error}
+        </p>
+      ) : null}
+
       <div className="admin-quick-actions-panel summary-card" data-testid="admin-quick-actions">
         <h2 className="admin-quick-actions-title">Quick Actions</h2>
         <div className="admin-quick-actions-grid">
-          <button type="button" className="admin-quick-card dark" data-testid="quick-add-plan">
+          <button
+            type="button"
+            className="admin-quick-card dark"
+            data-testid="quick-add-plan"
+            onClick={() => navigate('/admin/packages')}
+          >
             <div className="admin-quick-card-inner">
               <div className="admin-quick-icon">
                 <FiPlus size={20} />
@@ -197,7 +303,12 @@ function AdminOverviewPage() {
               </div>
             </div>
           </button>
-          <button type="button" className="admin-quick-card mid" data-testid="quick-transactions">
+          <button
+            type="button"
+            className="admin-quick-card mid"
+            data-testid="quick-transactions"
+            onClick={() => navigate('/admin/transactions')}
+          >
             <div className="admin-quick-card-inner">
               <div className="admin-quick-icon">
                 <FiFileText size={20} />
@@ -208,7 +319,16 @@ function AdminOverviewPage() {
               </div>
             </div>
           </button>
-          <button type="button" className="admin-quick-card light" data-testid="quick-export">
+          <button
+            type="button"
+            className="admin-quick-card light"
+            data-testid="quick-export"
+            onClick={() =>
+              setError(
+                'BACKEND ENDPOINT MISSING / NOT AVAILABLE: Export Report (no admin export endpoint in Postman/API)'
+              )
+            }
+          >
             <div className="admin-quick-card-inner">
               <div className="admin-quick-icon">
                 <FiDownload size={20} />
@@ -229,22 +349,26 @@ function AdminOverviewPage() {
               <div className="icon-book">
                 <LuUsers size={20} color="#000E33" />
               </div>
-              <span className="admin-growth-badge">+12.5%</span>
+              <span className="admin-growth-badge">
+                {loading ? '…' : getStatText(stats, 'user_growth')}
+              </span>
             </div>
             <h4>Total Users</h4>
-            <h1>15,847</h1>
+            <h1>{loading ? '…' : getStatText(stats, 'users')}</h1>
             <ul className="admin-stat-breakdown">
               <li>
                 <span>Active Users</span>
-                <span className="admin-value">12,340</span>
+                <span className="admin-value">
+                  {loading ? '…' : getStatText(stats, 'active_users')}
+                </span>
               </li>
               <li>
                 <span>Inactive Users</span>
-                <span>2,507</span>
+                <span>{loading ? '…' : getStatText(stats, 'inactive_users')}</span>
               </li>
               <li>
                 <span>Trial Users</span>
-                <span>1,000</span>
+                <span>{loading ? '…' : getStatText(stats, 'trial_users')}</span>
               </li>
             </ul>
           </div>
@@ -256,22 +380,24 @@ function AdminOverviewPage() {
               <div className="icon-book">
                 <LuCircleDollarSign size={20} color="#000E33" />
               </div>
-              <span className="admin-growth-badge">+18.2%</span>
+              <span className="admin-growth-badge">
+                {loading ? '…' : getStatText(stats, 'revenue_growth')}
+              </span>
             </div>
             <h4>Total Revenue</h4>
-            <h1>$847,290</h1>
+            <h1>{loading ? '…' : withDollar(getStatText(stats, 'revenue'))}</h1>
             <ul className="admin-stat-breakdown">
               <li>
                 <span>This Month</span>
-                <span>$125,430</span>
+                <span>{loading ? '…' : withDollar(getStatText(stats, 'this_month_revenue'))}</span>
               </li>
               <li>
                 <span>Last Month</span>
-                <span>$106,200</span>
+                <span>{loading ? '…' : withDollar(getStatText(stats, 'last_month_revenue'))}</span>
               </li>
               <li>
                 <span>Growth</span>
-                <span>18.2%</span>
+                <span>{loading ? '…' : getStatText(stats, 'growth_pct')}</span>
               </li>
             </ul>
           </div>
@@ -283,22 +409,24 @@ function AdminOverviewPage() {
               <div className="icon-book">
                 <LuCrown size={20} color="#000E33" />
               </div>
-              <span className="admin-growth-badge">+8.7%</span>
+              <span className="admin-growth-badge">
+                {loading ? '…' : getStatText(stats, 'subscriptions_growth')}
+              </span>
             </div>
             <h4>Subscriptions by Plan</h4>
-            <h1>8,945</h1>
+            <h1>{loading ? '…' : getStatText(stats, 'subscriptions')}</h1>
             <ul className="admin-stat-breakdown">
               <li>
                 <span>Basic Plan</span>
-                <span>4,023</span>
+                <span>{loading ? '…' : getStatText(stats, 'basic_plan')}</span>
               </li>
               <li>
                 <span>Premium Plan</span>
-                <span>3,124</span>
+                <span>{loading ? '…' : getStatText(stats, 'premium_plan')}</span>
               </li>
               <li>
                 <span>Enterprise Plan</span>
-                <span>1,906</span>
+                <span>{loading ? '…' : getStatText(stats, 'enterprise_plan')}</span>
               </li>
             </ul>
           </div>
@@ -354,23 +482,13 @@ function AdminOverviewPage() {
               <div className="admin-pie-total">
                 <span className="admin-pie-total-label">Total Revenue</span>
                 <div className="admin-pie-legend-right">
-                  <div className="admin-pie-total-amount">$170,190</div>
-                  <div className="admin-pie-pct">20%</div>
+                  <div className="admin-pie-total-amount">{pieTotalAmount}</div>
+                  <div className="admin-pie-pct">{pieTotalPct}</div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
-    </div>
-  );
-}
-
-function AdminPlaceholderPage({ title }) {
-  return (
-    <div data-testid={`admin-page-${title.toLowerCase()}`}>
-      <div className="admin-placeholder-page">
-        <p>{title} section — content coming soon.</p>
       </div>
     </div>
   );
@@ -414,7 +532,7 @@ function AdminDashboard() {
             <Route path="users" element={<AdminUsers />} />
             <Route path="packages" element={<AdminPackages />} />
             <Route path="transactions" element={<AdminTransactions />} />
-            <Route path="settings" element={<AdminPlaceholderPage title="Settings" />} />
+            <Route path="settings" element={<AdminSettings />} />
           </Routes>
         </div>
       </main>
