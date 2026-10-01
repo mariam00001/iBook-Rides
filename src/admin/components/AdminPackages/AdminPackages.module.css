@@ -33,17 +33,7 @@
   min-width: 180px;
   flex: 1;
 }
-._feature_1ftn3_135 span{
-  font-family: Poppins;
-font-weight: 400;
-font-style: Regular;
-font-size: 10px;
-leading-trim: NONE;
-line-height: 160%;
-letter-spacing: 0px;
-vertical-align: middle;
-color: #314158;
-}
+
 .field label {
   font-family: Poppins, sans-serif;
   font-size: 13px;
@@ -299,6 +289,148 @@ color: #314158;
   }
 
   .grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Package Settings popup (Cards → Add New Plan) */
+.settingsGaps {
+  margin: 0 0 16px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  background: #fff7ed;
+  border: 1px dashed #fdba74;
+  color: #9a3412;
+  font-family: Poppins, sans-serif;
+  font-size: 12px;
+  line-height: 1.45;
+}
+
+.settingsGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px 24px;
+  margin-bottom: 24px;
+}
+
+.settingsField {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+}
+
+.settingsField span {
+  font-family: Poppins, sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  color: #111827;
+}
+
+.settingsInput {
+  width: 100%;
+  height: 44px;
+  border: 1px solid #d1d5db;
+  border-radius: 10px;
+  padding: 10px 14px;
+  background: #f9fafb;
+  font-family: Poppins, sans-serif;
+  font-size: 14px;
+  color: #374151;
+  outline: none;
+}
+
+.settingsInput:focus {
+  border-color: #02133c;
+}
+
+.settingsColumns {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px 32px;
+}
+
+.settingsBlockTitle {
+  margin: 0 0 14px;
+  font-family: Poppins, sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  color: #111827;
+}
+
+.toggleGrid,
+.checkGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px 20px;
+}
+
+.toggleCol,
+.checkCol {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.toggleRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  font-family: Poppins, sans-serif;
+  font-size: 12px;
+  color: #314158;
+}
+
+.toggle {
+  width: 40px;
+  height: 22px;
+  border: none;
+  border-radius: 999px;
+  background: #d1d5db;
+  padding: 2px;
+  cursor: pointer;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+}
+
+.toggleOn {
+  background: #02133c;
+  justify-content: flex-end;
+}
+
+.toggleKnob {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #ffffff;
+  display: block;
+}
+
+.checkRow {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-family: Poppins, sans-serif;
+  font-size: 12px;
+  color: #314158;
+  cursor: pointer;
+}
+
+.checkRow input {
+  width: 16px;
+  height: 16px;
+  margin-top: 2px;
+  accent-color: #02133c;
+  flex-shrink: 0;
+}
+
+@media (max-width: 768px) {
+  .settingsGrid,
+  .settingsColumns,
+  .toggleGrid,
+  .checkGrid {
     grid-template-columns: 1fr;
   }
 }

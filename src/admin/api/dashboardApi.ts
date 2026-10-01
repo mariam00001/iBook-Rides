@@ -61,7 +61,7 @@ export async function fetchAdminDashboard(
         label: 'User Growth',
         value:
           data.userGrowthPercent != null
-            ? okField(`+${data.userGrowthPercent}%`)
+            ? okField(`${data.userGrowthPercent}%`)
             : missingField('Backend value unavailable'),
       },
       {
@@ -101,7 +101,7 @@ export async function fetchAdminDashboard(
         label: 'Revenue Growth',
         value:
           data.revenueGrowthPercent != null
-            ? okField(`+${data.revenueGrowthPercent}%`)
+            ? okField(`${data.revenueGrowthPercent}%`)
             : missingField('Backend value unavailable'),
       },
       {
@@ -141,7 +141,7 @@ export async function fetchAdminDashboard(
         label: 'Subscriptions Growth',
         value:
           byPlan.growthPercent != null
-            ? okField(`+${byPlan.growthPercent}%`)
+            ? okField(`${byPlan.growthPercent}%`)
             : missingField('Backend value unavailable'),
       },
       {

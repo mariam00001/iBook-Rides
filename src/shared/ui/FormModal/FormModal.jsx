@@ -59,6 +59,7 @@ function FormModal({
   children,
   testId = 'shared-form-modal',
   compact = false,
+  wide = false,
 }) {
   useEffect(() => {
     if (!open) return undefined;
@@ -71,6 +72,10 @@ function FormModal({
 
   if (!open) return null;
 
+  const sizeClass = [compact ? styles.compact : '', wide ? styles.wide : '']
+    .filter(Boolean)
+    .join(' ');
+
   return (
     <div
       className={styles.overlay}
@@ -78,7 +83,7 @@ function FormModal({
       onClick={onClose}
     >
       <div
-        className={`${styles.content} ${compact ? styles.compact : ''}`.trim()}
+        className={`${styles.content} ${sizeClass}`.trim()}
         data-testid={testId}
         onClick={(event) => event.stopPropagation()}
       >

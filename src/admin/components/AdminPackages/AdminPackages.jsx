@@ -28,7 +28,50 @@ const TABLE_COLUMNS = [
 
 const ENTRIES_PER_PAGE = 8;
 
-const EMPTY_FORM = {
+/** Customize toggles — labels match design (including typos). */
+const CUSTOMIZE_TOGGLES = [
+  { key: 'peakHoursFacility', label: 'Peak Hours Facility', apiKey: 'peak_hour_facility' },
+  { key: 'visibleInFrontend', label: 'visible in frontend', apiKey: null },
+  { key: 'googleCalendar', label: 'Google Calender', apiKey: 'google_calendar_synchronization' },
+  { key: 'promoCodeApplicable', label: 'Promo Code Applicable', apiKey: 'avail_promo_code' },
+  { key: 'trackFlightStatus', label: 'Track Flight Status', apiKey: 'track_flight_status' },
+  { key: 'specialPackage', label: 'Special Package', apiKey: null },
+];
+
+/** Additional Features checkboxes — labels match design. */
+const ADDITIONAL_FEATURES = [
+  { key: 'unlimitedBookings', label: 'Unlimeted bokungs', apiKey: 'unlimited_booking' },
+  { key: 'onlineBookingAccessible', label: 'Online booking Accessible', apiKey: 'online_booking_form_accessible' },
+  { key: 'localGlobalAffiliate', label: 'Local & Global Affiliate', apiKey: 'local_and_global_affiliates' },
+  { key: 'merchantAccountAccessible', label: 'Merchant Account Accessiable', apiKey: 'merchant_account_accessible' },
+  { key: 'driverScheduling', label: 'Driver scheduling', apiKey: 'driver_scheduling' },
+  { key: 'invoicing', label: 'Invoicing', apiKey: 'invoicing' },
+  { key: 'revenueReport', label: 'Revenue Report', apiKey: 'revenue_report_visibility' },
+  { key: 'instantPriceQuoting', label: 'instant price quoting', apiKey: 'instant_price_quoting_facility' },
+];
+
+const EMPTY_PACKAGE_SETTINGS = {
+  packageName: '',
+  userAccess: '',
+  monthlyPrice: '',
+  yearlyPrice: '',
+  peakHoursFacility: false,
+  visibleInFrontend: false,
+  googleCalendar: false,
+  promoCodeApplicable: false,
+  trackFlightStatus: false,
+  specialPackage: false,
+  unlimitedBookings: false,
+  onlineBookingAccessible: false,
+  localGlobalAffiliate: false,
+  merchantAccountAccessible: false,
+  driverScheduling: false,
+  invoicing: false,
+  revenueReport: false,
+  instantPriceQuoting: false,
+};
+
+const EMPTY_EDIT_FORM = {
   name: '',
   description: '',
   price: '',
@@ -46,9 +89,11 @@ function AdminPackages() {
   const [appliedFilter, setAppliedFilter] = useState('All');
   const [view, setView] = useState('cards');
   const [currentPage, setCurrentPage] = useState(1);
-  const [showModal, setShowModal] = useState(false);
+  const [showPackageSettings, setShowPackageSettings] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
   const [editingId, setEditingId] = useState(null);
-  const [formData, setFormData] = useState(EMPTY_FORM);
+  const [packageSettings, setPackageSettings] = useState(EMPTY_PACKAGE_SETTINGS);
+  const [editForm, setEditForm] = useState(EMPTY_EDIT_FORM);
   const [submitting, setSubmitting] = useState(false);
 
   const loadPackages = async () => {
@@ -109,15 +154,15 @@ function AdminPackages() {
     setAppliedFilter(filterPlan);
   };
 
-  const handleInputChange = (event) => {
-    const { name, value } = event.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+  const closePackageSettings = () => {
+    setShowPackageSettings(false);
+    setPackageSettings(EMPTY_PACKAGE_SETTINGS);
   };
 
-  const closeModal = () => {
-    setShowModal(false);
+  const closeEditModal = () => {
+    setShowEditModal(false);
     setEditingId(null);
-    setFormData(EMPTY_FORM);
+    setEditForm(EMPTY_EDIT_FORM);
   };
 
   const handleDelete = async (id) => {
@@ -132,11 +177,11 @@ function AdminPackages() {
     }
   };
 
+  /** Cards view only — opens Package Settings design popup. */
   const handleAddPlan = () => {
     setActionError('');
-    setEditingId(null);
-    setFormData(EMPTY_FORM);
-    setShowModal(true);
+    setPackageSettings(EMPTY_PACKAGE_SETTINGS);
+    setShowPackageSettings(true);
   };
 
   const handleEdit = (plan) => {
@@ -150,7 +195,7 @@ function AdminPackages() {
       plan.durationDays?.backendStatus === 'ok' && plan.durationDays.value != null
         ? String(plan.durationDays.value)
         : '';
-    setFormData({
+    setEditForm({
       name: plan.name || '',
       description:
         plan.description?.backendStatus === 'ok' && plan.description.value != null
@@ -159,16 +204,92 @@ function AdminPackages() {
       price: priceValue,
       duration_days: daysValue,
     });
-    setShowModal(true);
+    setShowEditModal(true);
   };
 
-  const handleSubmit = async () => {
+  const onPackageField = (event) => {
+    const { name, value } = event.target;
+    setPackageSettings((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const onPackageToggle = (key) => {
+    setPackageSettings((prev) => ({ ...prev, [key]: !prev[key] }));
+  };
+
+  const onEditField = (event) => {
+    const { name, value } = event.target;
+    setEditForm((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handlePackageSettingsSubmit = async () => {
+    setActionError('');
+    const name = packageSettings.packageName.trim();
+    const monthly = Number(packageSettings.monthlyPrice);
+    const yearly = Number(packageSettings.yearlyPrice);
+    const hasMonthly = packageSettings.monthlyPrice !== '' && !Number.isNaN(monthly);
+    const hasYearly = packageSettings.yearlyPrice !== '' && !Number.isNaN(yearly);
+
+    if (!name) {
+      setActionError('Package Name is required');
+      return;
+    }
+    if (!hasMonthly && !hasYearly) {
+      setActionError('Enter a monthly or yearly price');
+      return;
+    }
+
+    // Backend create contract only accepts name, description, price, duration_days.
+    const payload = {
+      name,
+      description: `${name} package`,
+      price: hasMonthly ? monthly : yearly,
+      duration_days: hasMonthly ? 30 : 365,
+    };
+
+    const gaps = [];
+    if (packageSettings.userAccess) {
+      gaps.push('Number Of User Access cannot be saved — backend is missing.');
+    }
+    if (hasMonthly && hasYearly) {
+      gaps.push(
+        'Only one price is stored (monthly used). Separate yearly price is missing on create.'
+      );
+    }
+    if (packageSettings.visibleInFrontend || packageSettings.specialPackage) {
+      gaps.push('visible in frontend / Special Package flags are missing on backend.');
+    }
+    const anyFeature =
+      CUSTOMIZE_TOGGLES.concat(ADDITIONAL_FEATURES).some(
+        (item) => item.apiKey && packageSettings[item.key]
+      );
+    if (anyFeature) {
+      gaps.push('Feature toggles/checkboxes are not accepted on POST /admin/packages.');
+    }
+
+    setSubmitting(true);
+    try {
+      await storeAdminPackage(payload);
+      closePackageSettings();
+      if (gaps.length) {
+        setActionError(gaps.join(' '));
+      }
+      await loadPackages();
+    } catch (error) {
+      setActionError(
+        error instanceof AdminApiError ? error.message : 'Failed to create package'
+      );
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  const handleEditSubmit = async () => {
     setActionError('');
     const payload = {
-      name: formData.name.trim(),
-      description: formData.description.trim(),
-      price: Number(formData.price),
-      duration_days: Number(formData.duration_days),
+      name: editForm.name.trim(),
+      description: editForm.description.trim(),
+      price: Number(editForm.price),
+      duration_days: Number(editForm.duration_days),
     };
 
     if (!payload.name || !payload.description) {
@@ -182,25 +303,22 @@ function AdminPackages() {
 
     setSubmitting(true);
     try {
-      if (editingId) {
-        await updateAdminPackage(editingId, payload);
-      } else {
-        await storeAdminPackage(payload);
-      }
-      closeModal();
+      await updateAdminPackage(editingId, payload);
+      closeEditModal();
       await loadPackages();
     } catch (error) {
       setActionError(
-        error instanceof AdminApiError
-          ? error.message
-          : editingId
-            ? 'Failed to update package'
-            : 'Failed to create package'
+        error instanceof AdminApiError ? error.message : 'Failed to update package'
       );
     } finally {
       setSubmitting(false);
     }
   };
+
+  const customizeLeft = CUSTOMIZE_TOGGLES.slice(0, 3);
+  const customizeRight = CUSTOMIZE_TOGGLES.slice(3);
+  const additionalLeft = ADDITIONAL_FEATURES.slice(0, 4);
+  const additionalRight = ADDITIONAL_FEATURES.slice(4);
 
   return (
     <div className={styles.page} data-testid="admin-packages-page">
@@ -288,14 +406,16 @@ function AdminPackages() {
           </button>
         </div>
 
-        <button
-          type="button"
-          className={styles.addBtn}
-          data-testid="admin-packages-add-btn"
-          onClick={handleAddPlan}
-        >
-          + Add New Plan
-        </button>
+        {view === 'cards' ? (
+          <button
+            type="button"
+            className={styles.addBtn}
+            data-testid="admin-packages-add-btn"
+            onClick={handleAddPlan}
+          >
+            + Add New Plan
+          </button>
+        ) : null}
       </div>
 
       {loading ? (
@@ -360,7 +480,7 @@ function AdminPackages() {
             pageRows.map((plan) => (
               <tr key={plan.id}>
                 <td>
-                  <div className={t.userName}>{plan.name}</div>
+                  <div className={t.userCell}>{plan.name}</div>
                 </td>
                 <td>
                   <div className={t.email}>{plan.tablePrice}</div>
@@ -437,15 +557,163 @@ function AdminPackages() {
         </div>
       </div>
 
+      {/* Cards → Add New Plan → Package Settings (design) */}
       <FormModal
-        open={showModal}
-        title={editingId ? 'Update Plan' : 'Add New Plan'}
-        submitLabel={
-          submitting ? 'Saving…' : editingId ? 'Update Plan' : '+ Add Plan'
-        }
-        onClose={closeModal}
-        onSubmit={handleSubmit}
-        testId={editingId ? 'edit-package-modal' : 'add-package-modal'}
+        open={showPackageSettings}
+        title="Package Settings"
+        submitLabel={submitting ? 'Saving…' : '+ Add New'}
+        onClose={closePackageSettings}
+        onSubmit={handlePackageSettingsSubmit}
+        testId="add-package-modal"
+        wide
+      >
+        <div className={styles.settingsGaps} data-testid="package-settings-backend-gaps">
+          Backend missing for this form: Number Of User Access, separate monthly + yearly
+          prices, Custmize/Additional feature flags on create, and “visible in frontend” /
+          “Special Package”. Create API only accepts name, description, price,
+          duration_days. Details: docs/admin-packages-backend-gaps.md
+        </div>
+
+        <div className={styles.settingsGrid}>
+          <label className={styles.settingsField}>
+            <span>Package Name</span>
+            <input
+              name="packageName"
+              className={styles.settingsInput}
+              placeholder="Form Distance uni"
+              value={packageSettings.packageName}
+              onChange={onPackageField}
+              data-testid="package-name"
+            />
+          </label>
+          <label className={styles.settingsField}>
+            <span>Number Of User Access</span>
+            <input
+              name="userAccess"
+              className={styles.settingsInput}
+              placeholder="Diistance Unit"
+              value={packageSettings.userAccess}
+              onChange={onPackageField}
+              data-testid="package-user-access"
+            />
+          </label>
+          <label className={styles.settingsField}>
+            <span>Package Monthly Price($)</span>
+            <input
+              name="monthlyPrice"
+              type="number"
+              step="0.01"
+              min="0"
+              className={styles.settingsInput}
+              placeholder="Form Distance uni"
+              value={packageSettings.monthlyPrice}
+              onChange={onPackageField}
+              data-testid="package-monthly-price"
+            />
+          </label>
+          <label className={styles.settingsField}>
+            <span>Package Yearly Price($)</span>
+            <input
+              name="yearlyPrice"
+              type="number"
+              step="0.01"
+              min="0"
+              className={styles.settingsInput}
+              placeholder="Diistance Unit"
+              value={packageSettings.yearlyPrice}
+              onChange={onPackageField}
+              data-testid="package-yearly-price"
+            />
+          </label>
+        </div>
+
+        <div className={styles.settingsColumns}>
+          <div className={styles.settingsBlock}>
+            <h4 className={styles.settingsBlockTitle}>Custmize</h4>
+            <div className={styles.toggleGrid}>
+              <div className={styles.toggleCol}>
+                {customizeLeft.map((item) => (
+                  <div key={item.key} className={styles.toggleRow}>
+                    <span>{item.label}</span>
+                    <button
+                      type="button"
+                      role="switch"
+                      aria-checked={packageSettings[item.key]}
+                      className={`${styles.toggle} ${
+                        packageSettings[item.key] ? styles.toggleOn : ''
+                      }`.trim()}
+                      data-testid={`package-toggle-${item.key}`}
+                      onClick={() => onPackageToggle(item.key)}
+                    >
+                      <span className={styles.toggleKnob} />
+                    </button>
+                  </div>
+                ))}
+              </div>
+              <div className={styles.toggleCol}>
+                {customizeRight.map((item) => (
+                  <div key={item.key} className={styles.toggleRow}>
+                    <span>{item.label}</span>
+                    <button
+                      type="button"
+                      role="switch"
+                      aria-checked={packageSettings[item.key]}
+                      className={`${styles.toggle} ${
+                        packageSettings[item.key] ? styles.toggleOn : ''
+                      }`.trim()}
+                      data-testid={`package-toggle-${item.key}`}
+                      onClick={() => onPackageToggle(item.key)}
+                    >
+                      <span className={styles.toggleKnob} />
+                    </button>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          <div className={styles.settingsBlock}>
+            <h4 className={styles.settingsBlockTitle}>Additional Features</h4>
+            <div className={styles.checkGrid}>
+              <div className={styles.checkCol}>
+                {additionalLeft.map((item) => (
+                  <label key={item.key} className={styles.checkRow}>
+                    <input
+                      type="checkbox"
+                      checked={packageSettings[item.key]}
+                      onChange={() => onPackageToggle(item.key)}
+                      data-testid={`package-check-${item.key}`}
+                    />
+                    <span>{item.label}</span>
+                  </label>
+                ))}
+              </div>
+              <div className={styles.checkCol}>
+                {additionalRight.map((item) => (
+                  <label key={item.key} className={styles.checkRow}>
+                    <input
+                      type="checkbox"
+                      checked={packageSettings[item.key]}
+                      onChange={() => onPackageToggle(item.key)}
+                      data-testid={`package-check-${item.key}`}
+                    />
+                    <span>{item.label}</span>
+                  </label>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      </FormModal>
+
+      {/* Table edit — existing narrow form */}
+      <FormModal
+        open={showEditModal}
+        title="Update Plan"
+        submitLabel={submitting ? 'Saving…' : 'Update Plan'}
+        onClose={closeEditModal}
+        onSubmit={handleEditSubmit}
+        testId="edit-package-modal"
         compact
       >
         <FormRow spaced>
@@ -454,9 +722,9 @@ function AdminPackages() {
               className={m.input}
               name="name"
               placeholder="Test Package"
-              value={formData.name}
-              onChange={handleInputChange}
-              data-testid="package-name"
+              value={editForm.name}
+              onChange={onEditField}
+              data-testid="edit-package-name"
               required
             />
           </FormField>
@@ -468,9 +736,9 @@ function AdminPackages() {
               step="0.01"
               min="0"
               placeholder="333.33"
-              value={formData.price}
-              onChange={handleInputChange}
-              data-testid="package-price"
+              value={editForm.price}
+              onChange={onEditField}
+              data-testid="edit-package-price"
               required
             />
           </FormField>
@@ -483,9 +751,9 @@ function AdminPackages() {
               type="number"
               min="1"
               placeholder="360"
-              value={formData.duration_days}
-              onChange={handleInputChange}
-              data-testid="package-duration-days"
+              value={editForm.duration_days}
+              onChange={onEditField}
+              data-testid="edit-package-duration-days"
               required
             />
           </FormField>
@@ -494,9 +762,9 @@ function AdminPackages() {
               className={m.input}
               name="description"
               placeholder="Test description"
-              value={formData.description}
-              onChange={handleInputChange}
-              data-testid="package-description"
+              value={editForm.description}
+              onChange={onEditField}
+              data-testid="edit-package-description"
               required
             />
           </FormField>

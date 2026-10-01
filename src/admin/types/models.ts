@@ -123,12 +123,16 @@ export interface AdminTransactionRow {
   emailHistory: BackendField<string>;
 }
 
-/** Settings CRUD (Postman) */
+/** Settings CRUD (Postman) — merchant value only */
 export interface AdminSettingValue {
   payment_gate?: string;
+  /** Live GET may return provider instead of payment_gate */
+  provider?: string;
   mode?: string;
   currency_code?: string;
   key?: string;
+  /** Live GET may return api_key instead of key */
+  api_key?: string;
   [key: string]: unknown;
 }
 
@@ -145,6 +149,23 @@ export interface AdminSettingRow {
   group: BackendField<string>;
   key: BackendField<string>;
   value: BackendField<string>;
+}
+
+/**
+ * Admin Settings page form (UI source of truth from design).
+ * Email / secondKey / terms are UI-only until backend supports them.
+ */
+export interface AdminSettingsForm {
+  emailId: string;
+  password: string;
+  paymentGateway: string;
+  mode: string;
+  currencyCode: string;
+  enterKeys: string;
+  /** BACKEND MISSING — not in merchant value schema */
+  secondKey: string;
+  /** BACKEND MISSING — no terms endpoint/key */
+  terms: string;
 }
 
 /** Dashboard UI cards / charts */

@@ -197,6 +197,8 @@ Verified user payload fields include `id`, `name`, `email`, `status`, `role`, co
 
 **Severity:** HIGH
 
+**Plain-language write-up:** see `docs/admin-users-backend-gaps.md`
+
 ---
 
 ### Missing Backend Feature
@@ -228,6 +230,8 @@ User resource **does** store `site_url`, `city`, `state`, `country`, `zip_code`,
 **Impact:** Most Add Subscriber form fields cannot be persisted as drawn in the UI.
 
 **Severity:** CRITICAL
+
+**Plain-language write-up:** see `docs/admin-users-backend-gaps.md`
 
 ---
 
@@ -359,6 +363,9 @@ No CORS failure was observed during live probing from this environment (Admin en
 | Create: companyName, siteUrl, city, state, phoneNumber, country, zipCode, notes, upload | Create body: `name`, `email`, `password`, `password_confirmation`, `role`, `plan_id` | request payload mismatch | Add Subscriber modal | CRITICAL |
 | Filter label `Trail` | package name `trial` | enum/alias mismatch (`package=trail` → empty; `package=trial` works) | Users filter | HIGH |
 | Filter option `Plus` | no `plus` package | missing enum value | Users filter | MEDIUM |
+
+Plain-language Users gaps: `docs/admin-users-backend-gaps.md`
+
 
 ### 7.2 Packages
 
